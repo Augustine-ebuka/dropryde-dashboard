@@ -22,7 +22,78 @@ const transactionsData = [
         transaction_status: "Pending",
         id: "2"
     },
-    // Add more transaction objects here
+    {
+        transaction_reference: "TX123458",
+        name: "Alice Johnson",
+        plan: "Annual",
+        amount: "$200.00",
+        date: "2024-08-19",
+        transaction_status: "Success",
+        id: "3"
+    },
+    {
+        transaction_reference: "TX123459",
+        name: "Bob Williams",
+        plan: "Quarterly",
+        amount: "$55.00",
+        date: "2024-08-18",
+        transaction_status: "Failed",
+        id: "4"
+    },
+    {
+        transaction_reference: "TX123460",
+        name: "Emma Brown",
+        plan: "Monthly",
+        amount: "$20.00",
+        date: "2024-08-17",
+        transaction_status: "Success",
+        id: "5"
+    },
+    {
+        transaction_reference: "TX123461",
+        name: "Michael Davis",
+        plan: "Annual",
+        amount: "$200.00",
+        date: "2024-08-16",
+        transaction_status: "Pending",
+        id: "6"
+    },
+    {
+        transaction_reference: "TX123462",
+        name: "Olivia Wilson",
+        plan: "Free",
+        amount: "$0.00",
+        date: "2024-08-15",
+        transaction_status: "Success",
+        id: "7"
+    },
+    {
+        transaction_reference: "TX123463",
+        name: "James Taylor",
+        plan: "Quarterly",
+        amount: "$55.00",
+        date: "2024-08-14",
+        transaction_status: "Success",
+        id: "8"
+    },
+    {
+        transaction_reference: "TX123464",
+        name: "Sophia Anderson",
+        plan: "Monthly",
+        amount: "$20.00",
+        date: "2024-08-13",
+        transaction_status: "Failed",
+        id: "9"
+    },
+    {
+        transaction_reference: "TX123465",
+        name: "William Martinez",
+        plan: "Annual",
+        amount: "$200.00",
+        date: "2024-08-12",
+        transaction_status: "Success",
+        id: "10"
+    }
 ];
 
 const HomeScreen: React.FC = () => {
