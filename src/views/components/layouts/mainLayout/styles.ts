@@ -11,7 +11,7 @@ export const Content = styled.div`
     flex: 1;
     margin-top: 70px;
     position: relative;
-    z-index: 99;
+    z-index: 1;
     background-color: #f9f6f7;
 
     @media screen and (min-width: 880px) {

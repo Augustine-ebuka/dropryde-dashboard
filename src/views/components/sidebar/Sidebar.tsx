@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
                         <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/transactions"><BsCashStack /> <span>Transactions</span></Link></MenuItems>
                     </ul>
                     <ul>
-                        <Title>subscribers</Title>
+                        <Title>All Users</Title>
                         <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/users"><FaUsers /> <span>Users</span></Link></MenuItems>
                     </ul>
                     <ul>

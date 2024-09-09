@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Content = styled.div`
     padding: 20px 15px;
+    height:100%;
 `;
 
 export const PageTitle = styled.h2`
@@ -162,7 +163,7 @@ export const TableHead = styled.ul`
     li {
         flex: 1;
         :first-child {
-            flex: 1.5;
+            flex: 1;
         }
     }
 
@@ -178,6 +179,7 @@ export const TableBody = styled.div`
 
 export const TableItems = styled.ul<{status: String}>`
     display: flex;
+    height:100%;
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 20px 20px 13px 20px;
@@ -190,7 +192,7 @@ export const TableItems = styled.ul<{status: String}>`
     }
     li {
         margin-bottom: 7px;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
         width: 50%;
         color: #5A5A5A;
@@ -206,7 +208,7 @@ export const TableItems = styled.ul<{status: String}>`
             margin-bottom: 16px;
             @media screen and (min-width: 880px) {
                 font-weight: 500;
-                flex: 1.5;
+                flex: 1;
                 flex-wrap: nowrap;
                 width: unset;
                 margin-bottom: 0px;

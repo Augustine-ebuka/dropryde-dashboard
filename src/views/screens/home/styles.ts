@@ -1,15 +1,17 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Content = styled.div`
     padding: 20px 15px;
 `;
 
-export const ardContainer = styled.div`
+export const CardContainer = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content:left;
     margin-top: 20px;
     flex-wrap: wrap;
+    gap: 30px
 `;
+
 export const PageHeader = styled.div`
     h2 {
         color: ${(props) => props.theme.primaryColor};
@@ -17,38 +19,11 @@ export const PageHeader = styled.div`
         font-weight: 700;
     }
 `;
-export const CardContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    flex-wrap: wrap;
-
-    /* Default: 1 card per row */
-    & > div {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    /* Tablets: 2 cards per row */
-    @media (min-width: 768px) {
-        & > div {
-            flex: 0 0 48%;
-            max-width: 48%;
-        }
-    }
-
-    /* Desktops: 3 cards per row */
-    @media (min-width: 1024px) {
-        & > div {
-            flex: 0 0 32%;
-            max-width: 32%;
-        }
-    }
-`;
 
 export const BalanceCard = styled.div`
     display: block;
-    max-width: 300px;
+    max-width: 500px;
+    min-width: 400px;
     background-color: #141414;
     position: relative;
     border-radius: 8px;
@@ -90,18 +65,15 @@ export const BalanceCardContent = styled.div`
     display: flex;
     flex-direction: column;
 
-
     h4 {
         color: #fff;
         font-size: 12px;
         margin-bottom: 40px;
     }
-        h2{
+    h2 {
         color: #F5AC38;
-        }
     }
 `;
-
 
 export const TableWrapper = styled.div`
     background: #fff;
@@ -134,11 +106,9 @@ export const TableHead = styled.ul`
     }
 `;
 
-export const TableBody = styled.div`
-    
-`;
+export const TableBody = styled.div``;
 
-export const TableItems = styled.ul<{status: String}>`
+export const TableItems = styled.ul<{ status: string }>`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -178,7 +148,7 @@ export const TableItems = styled.ul<{status: String}>`
         :last-child {
             margin-right: 0px;
             font-size: 10px;
-            color: ${props => props.status == "success" ? "#090" : props.status == "failed" ? "#D10B0B" : "#cc0"};
+            color: ${(props) => (props.status === 'success' ? '#090' : props.status === 'failed' ? '#D10B0B' : '#cc0')};
             @media screen and (min-width: 880px) {
                 font-size: 13px;
             }
@@ -191,5 +161,87 @@ export const TableItems = styled.ul<{status: String}>`
             margin-bottom: 0px;
             padding: 10px 0px;
         }
+    }
+`;
+
+// New styles
+
+export const PaginationControls = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 10px;
+
+    button {
+        padding: 8px 12px;
+        background-color: ${(props) => props.theme.primaryColor};
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        font-size: 14px;
+        color: #444;
+    }
+
+    select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+`;
+
+export const FilterSection = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px 0;
+
+    div {
+        display: flex;
+        align-items: center;
+
+        label {
+            margin-right: 10px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+
+        div {
+            margin-top: 10px;
+        }
+    }
+`;
+
+export const SearchInput = styled.input`
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+
+    @media screen and (min-width: 768px) {
+        width: 250px;
     }
 `;

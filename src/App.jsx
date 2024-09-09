@@ -14,23 +14,21 @@ import InternetScreen from './views/screens/bills/internet/InternetScreen';
 import AirtimeScreen from './views/screens/bills/airtime/AirtimeScreen';
 import ProfileScreen from './views/screens/profile/ProfileScreen';
 import UsersScreen from './views/screens/users/UsersScreen';
+import Signin from './views/screens/signin/Signin';
+import ForgotPassword from './views/screens/forgetPassword/ForgetPassword'
 
 function App() {
-
   return (
     <Router>
       <ThemeProvider theme={lightTheme}>
         <Routes>
           <Route path="/" element={<MainLayout title={"Dashboard"}><HomeScreen/></MainLayout>}/>
-          {/* <Route path="/transfer/bank" element={<MainLayout title={"Bank Transfers"}><BankTransferScreen/></MainLayout>}/> */}
-          {/* <Route path="/transfer/teller" element={<MainLayout title={"Teller Transfers"}><TellerTransferScreen/></MainLayout>}/> */}
           <Route path="/transactions" element={<MainLayout title={"Transactions"}><TransactionsScreen/></MainLayout>}/>
           <Route path="/users" element={<MainLayout title={"Users"}><UsersScreen /></MainLayout>}/>
-          
-          {/* <Route path="/bills/airtime" element={<MainLayout title={"Airtime"}><AirtimeScreen/></MainLayout>}/> */}
-          {/* <Route path="/bills/internet" element={<MainLayout title={"Internet"}><InternetScreen/></MainLayout>}/> */}
-          {/* <Route path="/bills/cable" element={<MainLayout title={"Cable"}><CableScreen/></MainLayout>}/>  */}
           <Route path="/user/profile" element={<MainLayout title={"Profile"}><ProfileScreen/></MainLayout>}/>
+          <Route path="/signin" element={<Signin />}/>
+          <Route path="/forget-password" element={<ForgotPassword />}/>
+
         </Routes>
       </ThemeProvider>
     </Router>
