@@ -43,7 +43,12 @@ const Sidebar: React.FC = () => {
                         <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/users"><FaUsers /> <span>Users</span></Link></MenuItems>
                     </ul>
                     <ul>
-                        <Title>Services</Title>
+                        <Title>Subscription</Title>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscription"><FaUsers /> <span>Manage subscription</span></Link></MenuItems>
+                    </ul>
+                    <ul>
+                        <Title>Support</Title>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/support"><FaUsers /> <span>Customer support</span></Link></MenuItems>
                     </ul>
                     <ul>
                         <Title>Account</Title>
