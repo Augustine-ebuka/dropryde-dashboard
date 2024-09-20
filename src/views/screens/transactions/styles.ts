@@ -1,129 +1,77 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Content = styled.div`
     padding: 20px 15px;
 `;
 
-export const PageTitle = styled.h2`
-    color: ${(props) => props.theme.primaryColor};
-    font-size: 15px;
-    font-weight: 700;
-`;
-
-export const StatsWrapper = styled.div`
-    margin-top: 20px;
-`;
-export const StatsContent = styled.div`
+export const CardContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    justify-content:left;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 30px
+`;
 
-    @media screen and (min-width: 880px) {
-        flex-direction: row;
-        border-radius: 6px;
-        background-color: ${(props) => props.theme.primaryColor};
-        padding: 20px 0px;
-        overflow: hidden;
+export const PageHeader = styled.div`
+    h2 {
+        color: ${(props) => props.theme.primaryColor};
+        font-size: 15px;
+        font-weight: 700;
     }
 `;
-export const StatsCard = styled.div`
-    background-color: ${(props) => props.theme.primaryColor};
+
+export const BalanceCard = styled.div`
+    display: block;
+    max-width: 500px;
+    min-width: 400px;
+    background-color: #141414;
+    position: relative;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+
+    ::after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background-color: #FFC700;
+        mix-blend-mode: overlay;
+        border-radius: 100px;
+        z-index: 3;
+        top: -100px;
+        left: 0px;
+    }
+    ::before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 100px;
+        background-color: #F5AC38;
+        mix-blend-mode: overlay;
+        z-index: 3;
+        bottom: 0px;
+        left: -100px;
+    }
+`;
+
+export const BalanceCardContent = styled.div`
+    position: relative;
+    z-index: 9;
     padding: 20px;
-    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
 
     h4 {
         color: #fff;
         font-size: 12px;
-        font-weight: 400;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
-
     h2 {
-        color: #fff;
-        font-size: 30px;
-        font-weight: 700;
-    }
-
-    :nth-child(2) {
-        margin: 20px 0px;
-    }
-    @media screen and (min-width: 880px) {
-        background-color: unset;
-        height: 180px;
-        flex: 1;
-        border-radius: 0px;
-        h4 {
-            font-size: 14px;
-        }
-
-        h2 {
-            font-size: 40px;
-        }
-        :nth-child(2) {
-            margin: 0px 0px;
-            border: 0.8px solid #fff;
-            border-top: none;
-            border-bottom: none;
-        }
-    }
-`;
-export const ActionSection = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 20px;
-
-    button {
-        width: 130px;
-        border: none;
-        height: 40px;
-        text-transform: capitalize;
-        background: ${props => props.theme.primaryColor};
-        border-radius: 4px;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    @media screen and (min-width: 880px) {
-        justify-content: flex-end;
-    }
-`;
-export const FilterSection = styled.div`
-    display: flex;
-    margin-top: 20px;
-
-    .input-sec {
-        background-color: #fff;
-        border: 1px solid rgba(145, 145, 145, 0.5);
-        border-radius: 4px;
-        padding: 0px 15px;
-        flex: 1;
-        max-width: 140px;
-        overflow: hidden;
-        input {
-            border: none;
-            background-color: #fff;
-            height: 40px;
-        }
-    }
-
-    select {
-        padding: 10px 15px;
-        max-width: 200px;
-        border-radius: 4px;
-        background-color: #fff;
-        height: 40px;
-        border: 1px solid rgba(145, 145, 145, 0.5);
-        flex: 1;
-        margin: 0px 20px;
-    }
-
-    button {
-        width: 100px;
-        border: none;
-        text-transform: capitalize;
-        background: ${props => props.theme.primaryColor};
-        border-radius: 4px;
-        color: #fff;
-        cursor: pointer;
+        color: #F5AC38;
     }
 `;
 
@@ -158,11 +106,9 @@ export const TableHead = styled.ul`
     }
 `;
 
-export const TableBody = styled.div`
-    
-`;
+export const TableBody = styled.div``;
 
-export const TableItems = styled.ul<{status: String}>`
+export const TableItems = styled.ul<{ status: string }>`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -176,12 +122,13 @@ export const TableItems = styled.ul<{status: String}>`
     }
     li {
         margin-bottom: 7px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: 400;
         width: 50%;
         color: #5A5A5A;
         @media screen and (min-width: 880px) {
             flex: 1;
+            font-size: 14px;
             flex-wrap: nowrap;
             width: unset;
         }
@@ -200,7 +147,11 @@ export const TableItems = styled.ul<{status: String}>`
         }
         :last-child {
             margin-right: 0px;
-            color: ${props => props.status == "success" ? "#090" : props.status == "failed" ? "#D10B0B" : "#cc0"};
+            font-size: 10px;
+            color: ${(props) => (props.status === 'success' ? '#090' : props.status === 'failed' ? '#D10B0B' : '#cc0')};
+            @media screen and (min-width: 880px) {
+                font-size: 13px;
+            }
         }
     }
     @media screen and (min-width: 880px) {
@@ -210,5 +161,87 @@ export const TableItems = styled.ul<{status: String}>`
             margin-bottom: 0px;
             padding: 10px 0px;
         }
+    }
+`;
+
+// New styles
+
+export const PaginationControls = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 10px;
+
+    button {
+        padding: 8px 12px;
+        background-color: ${(props) => props.theme.primaryColor};
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        font-size: 14px;
+        color: #444;
+    }
+
+    select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+`;
+
+export const FilterSection = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px 0;
+
+    div {
+        display: flex;
+        align-items: center;
+
+        label {
+            margin-right: 10px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+
+        div {
+            margin-top: 10px;
+        }
+    }
+`;
+
+export const SearchInput = styled.input`
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+
+    @media screen and (min-width: 768px) {
+        width: 250px;
     }
 `;

@@ -157,7 +157,7 @@ const AdminSupportScreen: React.FC = () => {
           indicatorColor="primary"
           textColor="primary"
           variant="scrollable"
-          scrollButtons="auto"
+          scrollButtons="auto"          
         >
           <Tab label="Chats" icon={<ChatIcon />} />
           <Tab label="Queries" icon={<QueryIcon />} />

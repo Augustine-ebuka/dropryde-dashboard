@@ -4,7 +4,11 @@ import { AiOutlineHome, AiOutlineWallet, AiOutlineBank } from 'react-icons/ai'
 import { BsCashStack, BsCreditCard2Back } from 'react-icons/bs'
 import { MdPhoneIphone, MdPhoneAndroid } from 'react-icons/md'
 import { FaSatelliteDish, FaUsers } from 'react-icons/fa'
+import { RiUserShared2Fill } from "react-icons/ri";
+import { MdOutlineChangeHistory } from "react-icons/md";
 import { CgProfile, CgLogOut } from 'react-icons/cg'
+import { BiSupport } from "react-icons/bi";
+import { IoMdSettings } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu } from "../../../actions";
 import { Link } from 'react-router-dom';
@@ -41,14 +45,20 @@ const Sidebar: React.FC = () => {
                     <ul>
                         <Title>All Users</Title>
                         <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/users"><FaUsers /> <span>Users</span></Link></MenuItems>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscribers"><RiUserShared2Fill /><span>subscribers</span></Link></MenuItems>
                     </ul>
                     <ul>
-                        <Title>Subscription</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscription"><FaUsers /> <span>Manage subscription</span></Link></MenuItems>
+                        <Title>Subscription Settings</Title>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscription"><MdOutlineChangeHistory />
+                        <span>Manage subscription</span></Link></MenuItems>
+                    </ul>
+                    <ul>
+                        <Title>Settings</Title>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/settings"><IoMdSettings /> <span>Settings</span></Link></MenuItems>
                     </ul>
                     <ul>
                         <Title>Support</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/support"><FaUsers /> <span>Customer support</span></Link></MenuItems>
+                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/support"><BiSupport /> <span>Customer support</span></Link></MenuItems>
                     </ul>
                     <ul>
                         <Title>Account</Title>

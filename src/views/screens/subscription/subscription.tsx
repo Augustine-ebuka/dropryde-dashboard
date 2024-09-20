@@ -127,11 +127,9 @@ const SubscriptionScreen: React.FC = () => {
 
   return (
     <ScreenContainer>
-      <Header>Subscription Management</Header>
-
       <Section>
-        <SectionTitle>Subscription Plans</SectionTitle>
-        <Button onClick={handleCreatePlan}>Create New Plan</Button>
+        <SectionTitle>Subscription Settings</SectionTitle>
+        <Button onClick={handleCreatePlan} style={{backgroundColor:"black", marginTop:"15px", marginBottom:"15px"}}>Create New Plan</Button>
         <Table>
           <thead>
             <tr>
@@ -151,7 +149,7 @@ const SubscriptionScreen: React.FC = () => {
                 <Td>{plan.benefits.join(', ')}</Td>
                 <Td>
                   <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
-                  <Button onClick={() => handleDeletePlan(plan)}>Delete</Button>
+                  <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>Delete</Button>
                 </Td>
               </tr>
             ))}

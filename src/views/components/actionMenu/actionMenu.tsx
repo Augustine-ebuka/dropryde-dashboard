@@ -4,6 +4,8 @@ import { ActionMenuWrapper, ModalWrapper, disableBodyScroll, enableBodyScroll } 
 import ProfileModal from '../modals/profileModal';
 import { IoCloseSharp } from "react-icons/io5";
 import EditModal from '../modals/editProfile/editProfile';
+import { useNavigate } from 'react-router-dom';
+
 
 // interface ActionMenuProps {
 //   userId: number;
@@ -13,6 +15,7 @@ import EditModal from '../modals/editProfile/editProfile';
 export default function ActionMenu({ userId, users }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState<string | null>(null);
+  const navigate = useNavigate()
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -53,7 +56,9 @@ export default function ActionMenu({ userId, users }: any) {
             <button className="close-btn" onClick={closeModal}><IoCloseSharp size={30} /></button>
             <h2>{modalContent}</h2>
             {modalContent === 'View Profile' && (
-              <ProfileModal users={users.filter((user: any) => user.id === userId)} />
+
+              navigate(`/view-profile/${userId}`)
+              // <ProfileModal users={users.filter((user: any) => user.id === userId)} />
             )}
             {modalContent === 'Edit' && <EditModal />}
             {modalContent === 'Delete' && (

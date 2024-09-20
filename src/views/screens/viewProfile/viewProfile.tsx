@@ -37,7 +37,7 @@ interface Company {
 
 const Container = styled(Box)`
   padding: 20px;
-  background-color: #f5f5f5
+  background-color: #f5f5f5;
 `;
 
 const TableWrapper = styled(TableContainer)`
@@ -65,7 +65,7 @@ const ModalContent = styled(Box)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
+  width: 400px;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -129,25 +129,12 @@ const CompanyManagement: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h5" gutterBottom color="#e3b616" p={"5px"} marginTop={"20px"}>
+      <Typography variant="h4" gutterBottom color="primary">
         Company Management
       </Typography>
-      <Tabs 
-      value={activeTab} 
-      onChange={handleTabChange} 
-      sx={{
-        '& .MuiTabs-indicator': {
-          backgroundColor: '#e3b616',
-        },
-        '& .MuiTab-root': {
-          color: '',
-          '&.Mui-selected': {
-            color: '#e3b616',
-          },
-        },
-      }}
-      >
-        <Tab label="Active Companies"/>
+
+      <Tabs value={activeTab} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
+        <Tab label="Active Companies" />
         <Tab label="Pending Companies" />
       </Tabs>
 
@@ -172,9 +159,10 @@ const CompanyManagement: React.FC = () => {
                 <StyledTableCell>
                   <Button 
                     variant="outlined" 
+                    color="primary" 
                     onClick={() => handleViewDetails(company)}
                     size="small"
-                    style={{ marginRight: '8px', color:"#e3b616", outlineColor:"#e3b616" }}
+                    style={{ marginRight: '8px' }}
                   >
                     View Details
                   </Button>
@@ -240,12 +228,11 @@ const CompanyManagement: React.FC = () => {
                     )
                     } 
                 />
-              </ListItem>
+</ListItem>
               </List>
               <Button onClick={handleCloseModal} color="primary">
                 Close
               </Button>
-              
             </>
           )}
         </ModalContent>

@@ -18,6 +18,9 @@ import Signin from './views/screens/signin/Signin';
 import ForgotPassword from './views/screens/forgetPassword/ForgetPassword'
 import SubscriptionScreen from './views/screens/subscription/subscription';
 import AdminSupportScreen from './views/screens/support/support';
+import ViewProfile from './views/screens/viewProfile/viewProfile';
+import SettingsPage from './views/screens/settings/settings';
+import OrderAndSubscriptionPage from './views/screens/orders/orderSubscriptionPage';
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
           <Route path="/forget-password" element={<ForgotPassword />}/>
           <Route path="/subscription"  element={<MainLayout title={"Users"}><SubscriptionScreen /></MainLayout>}/>
           <Route path="/support"  element={<MainLayout title={"Users"}><AdminSupportScreen /></MainLayout>}/>
+          <Route path="/view-profile/:id"  element={<MainLayout title={"Profile"}><ViewProfile /></MainLayout>}/>
+          <Route path="/settings"  element={<MainLayout title={"settings"}><SettingsPage /></MainLayout>}/>
+          <Route path="/subscribers"  element={<MainLayout title={"subscribers"}><OrderAndSubscriptionPage /></MainLayout>}/>
 
         </Routes>
       </ThemeProvider>
