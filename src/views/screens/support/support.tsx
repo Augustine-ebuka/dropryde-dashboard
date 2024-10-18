@@ -21,16 +21,18 @@ import {
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Chat as ChatIcon,
   QuestionAnswer as QueryIcon,
   Report as ReportIcon,
 } from '@material-ui/icons';
+import {fetchTickets} from "../../../apis/users"
+import { IoTicketSharp } from 'react-icons/io5';
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
 }
+
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -80,27 +82,33 @@ interface SupportItem {
 const AdminSupportScreen: React.FC = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [chats, setChats] = useState<SupportItem[]>([]);
   const [queries, setQueries] = useState<SupportItem[]>([]);
   const [complaints, setComplaints] = useState<SupportItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<SupportItem | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    // Mock data - replace with actual API calls
-    setChats([
-      { id: '1', user: 'John Doe', content: 'Need help with my subscription', timestamp: '2023-05-10 14:30', status: 'Open' },
-      { id: '2', user: 'Jane Smith', content: 'How do I cancel my plan?', timestamp: '2023-05-10 15:45', status: 'In Progress' },
-    ]);
-    setQueries([
-      { id: '3', user: 'Bob Johnson', content: 'What are the benefits of the pro plan?', timestamp: '2023-05-09 11:20', status: 'Open' },
-      { id: '4', user: 'Alice Brown', content: 'Is there a student discount?', timestamp: '2023-05-09 13:15', status: 'Closed' },
-    ]);
-    setComplaints([
-      { id: '5', user: 'Charlie Wilson', content: 'Billing error on my account', timestamp: '2023-05-08 09:00', status: 'Open' },
-      { id: '6', user: 'Diana Miller', content: 'Service outage report', timestamp: '2023-05-08 10:30', status: 'In Progress' },
-    ]);
+    const loadTickets = async () => {
+      try {
+        // setIsLoading(true);
+        const ticketsData = await fetchTickets();
+        console.log(ticketsData.data)
+        
+        // Assuming the API returns an object with categories
+        setQueries(ticketsData.data);
+        setComplaints(ticketsData.data);
+      } catch (err) {
+        console.error('Error fetching tickets:', err);
+        // setError('Failed to load tickets. Please try again later.');
+      } finally {
+        // setIsLoading(false);
+      }
+    };
+
+    loadTickets();
   }, []);
+
+  console.log()
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -116,23 +124,23 @@ const AdminSupportScreen: React.FC = () => {
     setSelectedItem(null);
   };
 
-  const renderList = (items: SupportItem[]) => (
+  const renderList = (items: any) => (
     <List>
-      {items.map((item) => (
+      {items.map((item: any) => (
         <Paper key={item.id} className={classes.listItem}>
           <ListItem alignItems="flex-start" button onClick={() => handleItemClick(item)}>
             <ListItemAvatar>
-              <Avatar>{item.user.charAt(0)}</Avatar>
+              <Avatar>{item.firstname.charAt(0) + item.lastname.charAt(0)}</Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={item.user}
               secondary={
                 <React.Fragment>
                   <Typography component="span" variant="body2" color="textPrimary">
-                    {item.content}
+                    
                   </Typography>
                   <br />
-                  {item.timestamp}
+                  {item.date_created}
                 </React.Fragment>
               }
             />
@@ -159,17 +167,11 @@ const AdminSupportScreen: React.FC = () => {
           variant="scrollable"
           scrollButtons="auto"          
         >
-          <Tab label="Chats" icon={<ChatIcon />} />
+          {/* <Tab label="Chats" icon={<ChatIcon />} /> */}
           <Tab label="Queries" icon={<QueryIcon />} />
           <Tab label="Complaints" icon={<ReportIcon />} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <Typography variant="h6" gutterBottom>
-          Active Chats
-        </Typography>
-        {renderList(chats)}
-      </TabPanel>
       <TabPanel value={value} index={1}>
         <Typography variant="h6" gutterBottom>
           Queries Received

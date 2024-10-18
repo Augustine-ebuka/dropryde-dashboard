@@ -22,17 +22,26 @@ import styled from 'styled-components';
 
 // Import the fetchCompanies function from our mock data file
 import { fetchCompanies } from '../../../userData';
+import { getUsers } from '../../../apis/users';
+import { approveUser } from '../../../apis/users';
+import { toast, ToastContainer } from 'react-toastify';
+
 
 // Define the Company interface based on the mock data structure
 interface Company {
   id: number;
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
-  registrationDate: string;
-  status: 'active' | 'pending';
-  contactPerson: string;
-  phoneNumber: string;
-  documents: string[];
+  phone: string;
+  country: string;
+  address: string;
+  business_name: string;
+  is_approved?:0 | 1;
+  business_size: string;
+  user_type: string;
+  date_created: string;
+  date_updated: string;
 }
 
 const Container = styled(Box)`
@@ -55,8 +64,8 @@ const StyledTableCell = styled(TableCell)<{ header?: boolean }>`
   font-weight: ${props => props.header ? 'bold' : 'normal'};
 `;
 
-const StatusCell = styled(TableCell)<{ status: 'active' | 'pending' }>`
-  color: ${props => props.status === 'active' ? 'green' : 'orange'};
+const StatusCell = styled(TableCell)<{ is_approved: 0 | 1 }>`
+  color: ${props => props.is_approved === 1 ? 'green' : 'orange'};
   font-weight: bold;
 `;
 
@@ -85,8 +94,8 @@ const CompanyManagement: React.FC = () => {
 
   const fetchCompanyData = async () => {
     try {
-      const data:any = await fetchCompanies();
-      setCompanies(data);
+      const data:any = await getUsers();
+      setCompanies(data.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching company data:", error);
@@ -98,11 +107,23 @@ const CompanyManagement: React.FC = () => {
     setActiveTab(newValue);
   };
 
-  const handleApprove = (companyId: number) => {
-    console.log(`Approving company with id: ${companyId}`);
-    setCompanies(companies.map(company => 
-      company.id === companyId ? {...company, status: 'active'} : company
-    ));
+  const handleApprove = async (userEmail: string) => {
+    try {
+      // Call the API to approve the user
+      await approveUser(userEmail);
+      
+      // If the API call is successful, update the local state
+      setCompanies(companies.map(company => 
+        company.email === userEmail ? {...company, is_approved: 1} : company
+      ));
+      toast.success("Company approved successfully") 
+      
+      console.log(`User with email ${userEmail} approved successfully`);
+    } catch (error) {
+      toast.error("Error approving Company") 
+      console.error(`Error approving user with email ${userEmail}:`, error);
+      // Handle the error (e.g., show an error message to the user)
+    }
   };
 
   const handleViewDetails = (company: Company) => {
@@ -115,8 +136,10 @@ const CompanyManagement: React.FC = () => {
     setSelectedCompany(null);
   };
 
+ 
+
   const filteredCompanies = companies.filter(company => 
-    activeTab === 0 ? company.status === 'active' : company.status === 'pending'
+    activeTab === 0 ? company.is_approved === 1 : company.is_approved === 0
   );
 
   if (loading) {
@@ -129,6 +152,7 @@ const CompanyManagement: React.FC = () => {
 
   return (
     <Container>
+      <ToastContainer />
       <Typography variant="h5" gutterBottom color="#e3b616" p={"5px"} marginTop={"20px"}>
         Company Management
       </Typography>
@@ -155,7 +179,7 @@ const CompanyManagement: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell header>Company Name</StyledTableCell>
+              <StyledTableCell header>Business Name</StyledTableCell>
               <StyledTableCell header>Email</StyledTableCell>
               <StyledTableCell header>Registration Date</StyledTableCell>
               <StyledTableCell header>Status</StyledTableCell>
@@ -165,10 +189,10 @@ const CompanyManagement: React.FC = () => {
           <TableBody>
             {filteredCompanies.map((company) => (
               <StyledTableRow key={company.id}>
-                <StyledTableCell>{company.name}</StyledTableCell>
+                <StyledTableCell>{company.firstname}</StyledTableCell>
                 <StyledTableCell>{company.email}</StyledTableCell>
-                <StyledTableCell>{new Date(company.registrationDate).toLocaleDateString()}</StyledTableCell>
-                <StatusCell status={company.status}>{company.status}</StatusCell>
+                <StyledTableCell>{new Date(company.date_created).toLocaleDateString()}</StyledTableCell>
+                <StyledTableCell>{company.is_approved===0 ? "Pending": "Approved"}</StyledTableCell>
                 <StyledTableCell>
                   <Button 
                     variant="outlined" 
@@ -182,7 +206,7 @@ const CompanyManagement: React.FC = () => {
                     <Button 
                       variant="contained" 
                       color="primary" 
-                      onClick={() => handleApprove(company.id)}
+                      onClick={() => handleApprove(company.email)}
                       size="small"
                     >
                       Approve
@@ -205,25 +229,25 @@ const CompanyManagement: React.FC = () => {
           {selectedCompany && (
             <>
               <Typography variant="h6" gutterBottom>
-                {selectedCompany.name} Details
+                {selectedCompany.firstname} Details
               </Typography>
               <List>
                 <ListItem>
-                  <ListItemText primary="Contact Person" secondary={selectedCompany.contactPerson} />
+                  <ListItemText primary="Contact Person" secondary={selectedCompany.email} />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary="Email" secondary={selectedCompany.email} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Phone Number" secondary={selectedCompany.phoneNumber} />
+                  <ListItemText primary="Phone Number" secondary={selectedCompany.phone} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Registration Date" secondary={new Date(selectedCompany.registrationDate).toLocaleDateString()} />
+                  <ListItemText primary="Registration Date" secondary={new Date(selectedCompany.date_created).toLocaleDateString()} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Status" secondary={selectedCompany.status} />
+                  <ListItemText primary="Status" secondary={selectedCompany.is_approved} />
                 </ListItem>
-                <ListItem>
+                {/* <ListItem>
                 <ListItemText 
                     primary="Submitted Documents" 
                     secondary={
@@ -240,7 +264,7 @@ const CompanyManagement: React.FC = () => {
                     )
                     } 
                 />
-              </ListItem>
+              </ListItem> */}
               </List>
               <Button onClick={handleCloseModal} color="primary">
                 Close

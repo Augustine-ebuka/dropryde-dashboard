@@ -16,23 +16,29 @@ import ProfileScreen from './views/screens/profile/ProfileScreen';
 import UsersScreen from './views/screens/users/UsersScreen';
 import Signin from './views/screens/signin/Signin';
 import ForgotPassword from './views/screens/forgetPassword/ForgetPassword'
+import VerifyOTP from './views/screens/forgetPassword/verifyOtp'
+import NewPasswordPage from './views/screens/forgetPassword/resetPassword'
 import SubscriptionScreen from './views/screens/subscription/subscription';
 import AdminSupportScreen from './views/screens/support/support';
 import ViewProfile from './views/screens/viewProfile/viewProfile';
 import SettingsPage from './views/screens/settings/settings';
 import OrderAndSubscriptionPage from './views/screens/orders/orderSubscriptionPage';
+import { UserProvider } from './context/userContext';
 
 function App() {
   return (
     <Router>
       <ThemeProvider theme={lightTheme}>
+      <UserProvider>
         <Routes>
-          <Route path="/" element={<MainLayout title={"Dashboard"}><HomeScreen/></MainLayout>}/>
+          <Route path="/dashboard" element={<MainLayout title={"Dashboard"}><HomeScreen/></MainLayout>}/>
           <Route path="/transactions" element={<MainLayout title={"Transactions"}><TransactionsScreen/></MainLayout>}/>
           <Route path="/users" element={<MainLayout title={"Users"}><UsersScreen /></MainLayout>}/>
           <Route path="/user/profile" element={<MainLayout title={"Profile"}><ProfileScreen/></MainLayout>}/>
-          <Route path="/signin" element={<Signin />}/>
+          <Route path="/" element={<Signin />}/>
           <Route path="/forget-password" element={<ForgotPassword />}/>
+          <Route path="/verify-otp" element={<VerifyOTP />}/>
+          <Route path="/reset-password" element={<NewPasswordPage />}/>
           <Route path="/subscription"  element={<MainLayout title={"Users"}><SubscriptionScreen /></MainLayout>}/>
           <Route path="/support"  element={<MainLayout title={"Users"}><AdminSupportScreen /></MainLayout>}/>
           <Route path="/view-profile/:id"  element={<MainLayout title={"Profile"}><ViewProfile /></MainLayout>}/>
@@ -40,6 +46,7 @@ function App() {
           <Route path="/subscribers"  element={<MainLayout title={"subscribers"}><OrderAndSubscriptionPage /></MainLayout>}/>
 
         </Routes>
+    </UserProvider>
       </ThemeProvider>
     </Router>
   );

@@ -2,107 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { BalanceCard, BalanceCardContent, Content, PageHeader, TableBody, TableHead, TableItems, TableWrapper, CardContainer, PaginationControls, FilterSection, SearchInput } from './styles'; // Assuming these are already defined styles
 // import SubscriptionChart from '../../components/chart/chart';
 import TickPlacementBars from '../../components/chart/chart';
-
-const transactionsData = [
-    {
-        transaction_reference: "TX123456",
-        name: "John Doe",
-        plan: "Monthly",
-        amount: "$20.00",
-        date: "2024-08-21",
-        transaction_status: "Success",
-        id: "1"
-    },
-    {
-        transaction_reference: "TX123457",
-        name: "Jane Smith",
-        plan: "Free",
-        amount: "$0.00",
-        date: "2024-08-20",
-        transaction_status: "Pending",
-        id: "2"
-    },
-    {
-        transaction_reference: "TX123458",
-        name: "Alice Johnson",
-        plan: "Annual",
-        amount: "$200.00",
-        date: "2024-08-19",
-        transaction_status: "Success",
-        id: "3"
-    },
-    {
-        transaction_reference: "TX123459",
-        name: "Bob Williams",
-        plan: "Quarterly",
-        amount: "$55.00",
-        date: "2024-08-18",
-        transaction_status: "Failed",
-        id: "4"
-    },
-    {
-        transaction_reference: "TX123460",
-        name: "Emma Brown",
-        plan: "Monthly",
-        amount: "$20.00",
-        date: "2024-08-17",
-        transaction_status: "Success",
-        id: "5"
-    },
-    {
-        transaction_reference: "TX123461",
-        name: "Michael Davis",
-        plan: "Annual",
-        amount: "$200.00",
-        date: "2024-08-16",
-        transaction_status: "Pending",
-        id: "6"
-    },
-    {
-        transaction_reference: "TX123462",
-        name: "Olivia Wilson",
-        plan: "Free",
-        amount: "$0.00",
-        date: "2024-08-15",
-        transaction_status: "Success",
-        id: "7"
-    },
-    {
-        transaction_reference: "TX123463",
-        name: "James Taylor",
-        plan: "Quarterly",
-        amount: "$55.00",
-        date: "2024-08-14",
-        transaction_status: "Success",
-        id: "8"
-    },
-    {
-        transaction_reference: "TX123464",
-        name: "Sophia Anderson",
-        plan: "Monthly",
-        amount: "$20.00",
-        date: "2024-08-13",
-        transaction_status: "Failed",
-        id: "9"
-    },
-    {
-        transaction_reference: "TX123465",
-        name: "William Martinez",
-        plan: "Annual",
-        amount: "$200.00",
-        date: "2024-08-12",
-        transaction_status: "Success",
-        id: "10"
-    }
-];
+import { getTransactions } from '../../../apis/transactions';
+import { TransactionData } from '../../../apis/transactions';
 
 const HomeScreen: React.FC = () => {
-    const [transactions, setTransactions] = useState(transactionsData);
+    const [transactions, setTransactions] = useState<TransactionData[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [transactionsPerPage, setTransactionsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [loading, setLoading] = useState(true); 
 
     // Pagination calculation
     const indexOfLastTransaction = currentPage * transactionsPerPage;
@@ -128,14 +38,32 @@ const HomeScreen: React.FC = () => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
+    useEffect(() => {
+        // Fetch the profile and transactions data when the component mounts
+        const fetchData = async () => {
+            try {
+                setLoading(true); // Start loading
+                const transactionsResponse = await getTransactions();
+                // setProfileData(profileResponse.data); // Set profile data
+                setTransactions(transactionsResponse?.data); // Set transactions data
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false); // Stop loading once the data is fetched
+            }
+        };
+        fetchData();
+    }, []);
+
     // Filter transactions by search and date range
     const filteredTransactions = transactions.filter((transaction) => {
-        const matchesSearch = transaction.transaction_reference.toLowerCase().includes(searchTerm) ||
-            transaction.name.toLowerCase().includes(searchTerm);
+        const matchesSearch =
+            transaction.reference.toLowerCase().includes(searchTerm) ||
+            transaction.user.firstname.toLowerCase().includes(searchTerm);
 
         const matchesDateRange =
-            (!startDate || new Date(transaction.date) >= new Date(startDate)) &&
-            (!endDate || new Date(transaction.date) <= new Date(endDate));
+            (!startDate || new Date(transaction.date_created) >= new Date(startDate)) &&
+            (!endDate || new Date(transaction.date_created) <= new Date(endDate));
 
         return matchesSearch && matchesDateRange;
     });
@@ -180,13 +108,13 @@ const HomeScreen: React.FC = () => {
                 </TableHead>
                 <TableBody>
                     {filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction).map((transaction) => (
-                        <TableItems status={transaction.transaction_status.toLowerCase()} key={transaction.id}>
-                            <li>{transaction.transaction_reference}</li>
-                            <li>{transaction.name}</li>
-                            <li>{transaction.plan}</li>
+                        <TableItems status={transaction.status.toLowerCase()} key={transaction.id}>
+                            <li>{transaction.reference}</li>
+                            <li>{transaction.user.firstname}</li>
+                            <li>{transaction.type}</li>
                             <li>{transaction.amount}</li>
-                            <li>{transaction.date}</li>
-                            <li>{transaction.transaction_status}</li>
+                            <li>{transaction.date_created}</li>
+                            <li>{transaction.status}</li>
                         </TableItems>
                     ))}
                 </TableBody>
@@ -194,7 +122,9 @@ const HomeScreen: React.FC = () => {
 
             <PaginationControls>
                 <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
-                <span>Page {currentPage} of {Math.ceil(filteredTransactions.length / transactionsPerPage)}</span>
+                <span>
+                    Page {currentPage} of {Math.ceil(filteredTransactions.length / transactionsPerPage)}
+                </span>
                 <button onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredTransactions.length / transactionsPerPage)}>Next</button>
                 <select value={transactionsPerPage} onChange={handleTransactionsPerPageChange}>
                     <option value="5">5</option>

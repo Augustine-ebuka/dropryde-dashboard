@@ -68,6 +68,80 @@ const AdminForgotPassword = styled.div`
             text-decoration: underline;
         }
     }
+        .resend-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-decoration: underline;
+
+    &:disabled {
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+
+  .forgot-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.password-requirements {
+  margin-top: 20px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.password-requirements ul {
+  padding-left: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #cccccc;
+}
 `;
 
 export default AdminForgotPassword;

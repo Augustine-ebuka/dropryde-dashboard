@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import { Content, Head, HeadContent, Home, MenuItems, SidebarContent, SidebarWrapper, Title } from './styles'
 import { AiOutlineHome, AiOutlineWallet, AiOutlineBank } from 'react-icons/ai'
 import { BsCashStack, BsCreditCard2Back } from 'react-icons/bs'
@@ -12,11 +12,15 @@ import { IoMdSettings } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu } from "../../../actions";
 import { Link } from 'react-router-dom';
+import { useUserContext } from '../../../context/userContext';
 
 
 const Sidebar: React.FC = () => {
+    const [profileData, setProfileData] = useState<any>(null); 
     const toggleState = useSelector((state: {navigation: any}) => state.navigation);
     const dispatch = useDispatch();
+    const { userProfile} = useUserContext();
+    const [loading, setLoading] = useState(true); 
 
     const sidebarRef = useRef(null)
     const contentRef = useRef(null)
@@ -25,7 +29,21 @@ const Sidebar: React.FC = () => {
         if (e.target == sidebarRef.current) {
             dispatch(toggleMenu());
         }
+
     }
+    useEffect(() => {
+        // Fetch the profile and transactions data when the component mounts
+        const fetchData = async () => {
+            try {
+                setProfileData(userProfile)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <SidebarWrapper ref={sidebarRef} onClick={e => closeMenu(e)} navigationState={toggleState}>
@@ -33,12 +51,12 @@ const Sidebar: React.FC = () => {
                 <Head>
                     <HeadContent>
                         <img src="/img/dropryde.png" alt="" style={{height:"50px", width:"100px"}} />
-                        <h4>John Doe</h4>
+                        <h4> {profileData?.firstname || 'Admin'} {profileData?.lastname || 'Admin'}</h4>
                     </HeadContent>
                 </Head>
                 <Content>
                     <ul>
-                        <Home><Link onClick={() => dispatch(toggleMenu())} to="/"><AiOutlineHome /><span>Home</span></Link></Home>
+                        <Home><Link onClick={() => dispatch(toggleMenu())} to="/dashboard"><AiOutlineHome /><span>Home</span></Link></Home>
                         <Title>Transfers</Title>
                         <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/transactions"><BsCashStack /> <span>Transactions</span></Link></MenuItems>
                     </ul>
