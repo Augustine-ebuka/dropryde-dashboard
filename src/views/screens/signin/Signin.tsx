@@ -4,14 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../../apis/auth'; // Import the login API
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// Import the LoginResponse interface
+import { GrFormViewHide } from "react-icons/gr";
 
 export default function Signin() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-console.log('Signin', formData);
+
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +31,6 @@ console.log('Signin', formData);
       const response = await login(formData);
 
       if (response.status === 1) {
-        // Success
         toast.success('Login successful!');
         if (response?.data.token) {
           localStorage.setItem('authToken', response.data.token);
@@ -37,9 +38,7 @@ console.log('Signin', formData);
         setTimeout(() => {
           navigate('/dashboard');
         }, 2000);
-        // Navigate to a dashboard or home page
       } else {
-        // Error from API
         toast.error(response.message || 'Login failed. Please try again.');
       }
     } catch (error) {
@@ -50,9 +49,9 @@ console.log('Signin', formData);
 
   return (
     <AdminLogin>
-      {/* Toast Container for notifications */}
       <ToastContainer />
       <div className="login-container">
+        <img src="https://i.ibb.co/fF6NJnP/favicon.png" alt="favicon" />
         <h2 className="login-title">Admin Sign In</h2>
         <form onSubmit={handleSubmit}>
           <input
@@ -64,15 +63,24 @@ console.log('Signin', formData);
             className="login-input"
             required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="login-input"
-            required
-          />
+
+          <div className="password-container">
+            <input
+              type={showPassword ? 'text' : 'password'} // Toggle between 'text' and 'password'
+              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="login-input"
+              required
+            />
+            <GrFormViewHide 
+              size={25}
+              onClick={() => setShowPassword(prev => !prev)}
+              className="password-toggle"
+            />
+          </div>
+
           <button className="login-button" type="submit">
             Sign In
           </button>
@@ -81,7 +89,6 @@ console.log('Signin', formData);
           <Link to="/forget-password">Forgot Password?</Link>
         </div>
       </div>
-      
     </AdminLogin>
   );
 }

@@ -62,6 +62,22 @@ const AdminLogin = styled.div`
             text-decoration: underline;
         }
     }
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  margin-bottom:10px;
+}
+
 `;
 
 export default AdminLogin;

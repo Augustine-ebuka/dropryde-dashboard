@@ -78,7 +78,7 @@ export const HeadContent = styled.div`
 export const Title = styled.h5`
    margin-bottom: 15px;
    font-size: 12px;
-//    color: #ccc;
+//color: #ccc;
    color: black;
    padding: 0px 10px;
    text-transform: uppercase;

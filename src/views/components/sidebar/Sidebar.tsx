@@ -1,41 +1,76 @@
-import React, {useRef, useEffect, useState} from 'react'
-import { Content, Head, HeadContent, Home, MenuItems, SidebarContent, SidebarWrapper, Title } from './styles'
-import { AiOutlineHome, AiOutlineWallet, AiOutlineBank } from 'react-icons/ai'
-import { BsCashStack, BsCreditCard2Back } from 'react-icons/bs'
-import { MdPhoneIphone, MdPhoneAndroid } from 'react-icons/md'
-import { FaSatelliteDish, FaUsers } from 'react-icons/fa'
+import React, { useRef, useEffect, useState } from 'react';
+import { Content, Head, HeadContent, Home, MenuItems, SidebarContent, SidebarWrapper, Title } from './styles';
+import { AiOutlineHome, AiOutlineWallet, AiOutlineBank } from 'react-icons/ai';
+import { BsCashStack, BsCreditCard2Back } from 'react-icons/bs';
+import { MdPhoneIphone, MdPhoneAndroid, MdOutlineChangeHistory } from 'react-icons/md';
+import { FaSatelliteDish, FaUsers } from 'react-icons/fa';
 import { RiUserShared2Fill } from "react-icons/ri";
-import { MdOutlineChangeHistory } from "react-icons/md";
-import { CgProfile, CgLogOut } from 'react-icons/cg'
+import { CgProfile, CgLogOut } from 'react-icons/cg';
 import { BiSupport } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu } from "../../../actions";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useUserContext } from '../../../context/userContext';
+import styled from 'styled-components';
 
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 5px 0;
+
+  &:hover, &.active {
+    background-color: black;
+    color: #007bff;
+  }
+
+  span {
+    margin-left: 10px;
+  }
+`;
+
+const StyledSidebarContent = styled(SidebarContent)`
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+`;
+
+const StyledTitle = styled(Title)`
+  font-size: 14px;
+  color: #888;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
 
 const Sidebar: React.FC = () => {
-    const [profileData, setProfileData] = useState<any>(null); 
-    const toggleState = useSelector((state: {navigation: any}) => state.navigation);
+    const [profileData, setProfileData] = useState<any>(null);
+    const toggleState = useSelector((state: { navigation: any }) => state.navigation);
     const dispatch = useDispatch();
-    const { userProfile} = useUserContext();
-    const [loading, setLoading] = useState(true); 
+    const { userProfile } = useUserContext();
+    const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
-    const sidebarRef = useRef(null)
-    const contentRef = useRef(null)
+    const sidebarRef = useRef(null);
+    const contentRef = useRef(null);
 
     const closeMenu = (e: { target: any }) => {
         if (e.target == sidebarRef.current) {
             dispatch(toggleMenu());
         }
+    };
 
-    }
     useEffect(() => {
-        // Fetch the profile and transactions data when the component mounts
         const fetchData = async () => {
             try {
-                setProfileData(userProfile)
+                setProfileData(userProfile);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -45,48 +80,53 @@ const Sidebar: React.FC = () => {
         fetchData();
     }, []);
 
+    const menuItems = [
+        { path: '/dashboard', icon: <AiOutlineHome />, title: 'Home' },
+        { path: '/transactions', icon: <BsCashStack />, title: 'Transactions', category: 'Transfers' },
+        { path: '/users', icon: <FaUsers />, title: 'Users', category: 'All Users' },
+        { path: '/subscribers', icon: <RiUserShared2Fill />, title: 'Subscribers', category: 'All Users' },
+        { path: '/subscription', icon: <MdOutlineChangeHistory />, title: 'Manage subscription', category: 'Subscription' },
+        { path: '/settings', icon: <IoMdSettings />, title: 'Settings', category: 'Settings' },
+        { path: '/support', icon: <BiSupport />, title: 'Customer support', category: 'Support' },
+        { path: '/user/profile', icon: <CgProfile />, title: 'Profile', category: 'Account' },
+        { path: '/', icon: <CgLogOut />, title: 'Logout', category: 'Account' },
+    ];
+
     return (
-        <SidebarWrapper ref={sidebarRef} onClick={e => closeMenu(e)} navigationState={toggleState}>
-            <SidebarContent navigationState={toggleState}>
+        <SidebarWrapper ref={sidebarRef} onClick={closeMenu} navigationState={toggleState}>
+            <StyledSidebarContent navigationState={toggleState}>
                 <Head>
                     <HeadContent>
-                        <img src="/img/dropryde.png" alt="" style={{height:"50px", width:"100px"}} />
-                        <h4> {profileData?.firstname || 'Admin'} {profileData?.lastname || 'Admin'}</h4>
+                        <img src="/img/dropryde.png" alt="" style={{ height: "50px", width: "100px" }} />
+                        <h4>{profileData?.firstname || 'Admin'} {profileData?.lastname || 'Admin'}</h4>
                     </HeadContent>
                 </Head>
                 <Content>
-                    <ul>
-                        <Home><Link onClick={() => dispatch(toggleMenu())} to="/dashboard"><AiOutlineHome /><span>Home</span></Link></Home>
-                        <Title>Transfers</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/transactions"><BsCashStack /> <span>Transactions</span></Link></MenuItems>
-                    </ul>
-                    <ul>
-                        <Title>All Users</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/users"><FaUsers /> <span>Users</span></Link></MenuItems>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscribers"><RiUserShared2Fill /><span>subscribers</span></Link></MenuItems>
-                    </ul>
-                    <ul>
-                        <Title>Subscription Settings</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/subscription"><MdOutlineChangeHistory />
-                        <span>Manage subscription</span></Link></MenuItems>
-                    </ul>
-                    <ul>
-                        <Title>Settings</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/settings"><IoMdSettings /> <span>Settings</span></Link></MenuItems>
-                    </ul>
-                    <ul>
-                        <Title>Support</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/support"><BiSupport /> <span>Customer support</span></Link></MenuItems>
-                    </ul>
-                    <ul>
-                        <Title>Account</Title>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/user/profile"><CgProfile /> <span>Profile</span></Link></MenuItems>
-                        <MenuItems><Link onClick={() => dispatch(toggleMenu())} to="/"><CgLogOut /> <span>Logout</span></Link></MenuItems>
-                    </ul>
+                    {['Transfers', 'All Users', 'Subscription', 'Settings', 'Support', 'Account'].map((category) => (
+                        <React.Fragment key={category}>
+                            <StyledTitle>{category}</StyledTitle>
+                            <ul>
+                                {menuItems
+                                    .filter(item => item.category === category || (category === 'Transfers' && item.path === '/dashboard'))
+                                    .map((item) => (
+                                        <MenuItems key={item.path}>
+                                            <StyledLink
+                                                to={item.path}
+                                                onClick={() => dispatch(toggleMenu())}
+                                                className={location.pathname === item.path ? 'active' : ''}
+                                            >
+                                                {item.icon}
+                                                <span>{item.title}</span>
+                                            </StyledLink>
+                                        </MenuItems>
+                                    ))}
+                            </ul>
+                        </React.Fragment>
+                    ))}
                 </Content>
-            </SidebarContent>
+            </StyledSidebarContent>
         </SidebarWrapper>
-    )
-}
+    );
+};
 
-export default Sidebar
+export default Sidebar;

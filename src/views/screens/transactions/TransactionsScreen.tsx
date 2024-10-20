@@ -68,6 +68,34 @@ const HomeScreen: React.FC = () => {
         return matchesSearch && matchesDateRange;
     });
 
+    // Function to download CSV
+    const downloadCSV = () => {
+        const headers = ["Transaction Reference", "Name", "Plan", "Amount", "Date", "Status"];
+        const csvContent = [
+            headers.join(","),
+            ...filteredTransactions.map(transaction => [
+                transaction.reference,
+                transaction.user.firstname,
+                transaction.type,
+                transaction.amount,
+                transaction.date_created,
+                transaction.status
+            ].join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "transactions.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
     return (
         <Content>
             <PageHeader>
@@ -75,12 +103,24 @@ const HomeScreen: React.FC = () => {
             </PageHeader>
 
             <FilterSection>
-                <SearchInput
-                    type="text"
-                    placeholder="Search transactions"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <SearchInput
+                        type="text"
+                        placeholder="Search transactions"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                    <button onClick={downloadCSV} style={{
+                        padding: '10px 15px',
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer'
+                    }}>
+                        Download CSV
+                    </button>
+                </div>
                 <div>
                     <label>Start Date:</label>
                     <input

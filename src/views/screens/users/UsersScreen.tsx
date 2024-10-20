@@ -16,7 +16,10 @@ import {
   Modal,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ImageList,
+  ImageListItem,
+  Pagination
 } from '@mui/material';
 import styled from 'styled-components';
 
@@ -42,6 +45,11 @@ interface Company {
   user_type: string;
   date_created: string;
   date_updated: string;
+  address_doc?: string;
+  identity_doc?:string;
+  business_doc?:string;
+  state?:string;
+  city?: string;
 }
 
 const Container = styled(Box)`
@@ -81,12 +89,20 @@ const ModalContent = styled(Box)`
   border-radius: 8px;
 `;
 
+const PaginationContainer = styled(Box)`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
 const CompanyManagement: React.FC = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(10);
 
   useEffect(() => {
     fetchCompanyData();
@@ -105,6 +121,7 @@ const CompanyManagement: React.FC = () => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+    setCurrentPage(1); // Reset to first page when changing tabs
   };
 
   const handleApprove = async (userEmail: string) => {
@@ -136,11 +153,18 @@ const CompanyManagement: React.FC = () => {
     setSelectedCompany(null);
   };
 
- 
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
 
   const filteredCompanies = companies.filter(company => 
     activeTab === 0 ? company.is_approved === 1 : company.is_approved === 0
   );
+
+  const totalPages = Math.ceil(filteredCompanies.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentCompanies = filteredCompanies.slice(startIndex, endIndex);
 
   if (loading) {
     return (
@@ -187,9 +211,9 @@ const CompanyManagement: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredCompanies.map((company) => (
+            {currentCompanies.map((company) => (
               <StyledTableRow key={company.id}>
-                <StyledTableCell>{company.firstname}</StyledTableCell>
+                <StyledTableCell>{company.business_name}</StyledTableCell>
                 <StyledTableCell>{company.email}</StyledTableCell>
                 <StyledTableCell>{new Date(company.date_created).toLocaleDateString()}</StyledTableCell>
                 <StyledTableCell>{company.is_approved===0 ? "Pending": "Approved"}</StyledTableCell>
@@ -219,21 +243,36 @@ const CompanyManagement: React.FC = () => {
         </Table>
       </TableWrapper>
 
+      <PaginationContainer>
+        <Pagination 
+          count={totalPages} 
+          page={currentPage} 
+          onChange={handlePageChange} 
+          color="primary"
+        />
+      </PaginationContainer>
+
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
         aria-labelledby="company-details-modal"
         aria-describedby="company-details-description"
       >
-        <ModalContent>
+        <ModalContent className='' style={{height:"500px", overflowY:"scroll"}}>
           {selectedCompany && (
             <>
               <Typography variant="h6" gutterBottom>
-                {selectedCompany.firstname} Details
+                {selectedCompany.business_name} Details
               </Typography>
               <List>
                 <ListItem>
                   <ListItemText primary="Contact Person" secondary={selectedCompany.email} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="First Name" secondary={selectedCompany.firstname} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Last Name" secondary={selectedCompany.lastname} />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary="Email" secondary={selectedCompany.email} />
@@ -242,34 +281,39 @@ const CompanyManagement: React.FC = () => {
                   <ListItemText primary="Phone Number" secondary={selectedCompany.phone} />
                 </ListItem>
                 <ListItem>
+                  <ListItemText primary="Business Name" secondary={selectedCompany.business_name} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Business size" secondary={selectedCompany.business_size} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Country" secondary={selectedCompany.country} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="State" secondary={selectedCompany.state} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="City" secondary={selectedCompany.city} />
+                </ListItem>
+                <ListItem>
                   <ListItemText primary="Registration Date" secondary={new Date(selectedCompany.date_created).toLocaleDateString()} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Status" secondary={selectedCompany.is_approved} />
+                  <ListItemText primary="Status" secondary={selectedCompany.is_approved===0?"Pending":"Active"} />
                 </ListItem>
-                {/* <ListItem>
-                <ListItemText 
-                    primary="Submitted Documents" 
-                    secondary={
-                    selectedCompany.documents && selectedCompany.documents.length > 0 ? (
-                        <List dense>
-                        {selectedCompany.documents.map((doc, index) => (
-                            <ListItem key={index}>
-                            <ListItemText primary={doc} />
-                            </ListItem>
-                        ))}
-                        </List>
-                    ) : (
-                        "No documents submitted"
-                    )
-                    } 
-                />
-              </ListItem> */}
+                <ImageListItem>
+                  <img
+                    src={`${selectedCompany.address_doc}?w=164&h=164&fit=crop&auto=format`}
+                    srcSet={`${selectedCompany.address_doc}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                    alt='image'
+                    loading="lazy"
+                    style={{ borderRadius: '8px' }} // Optional: to round the corners
+                  />
+              </ImageListItem>
               </List>
               <Button onClick={handleCloseModal} color="primary">
                 Close
               </Button>
-              
             </>
           )}
         </ModalContent>
