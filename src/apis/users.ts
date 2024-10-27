@@ -118,3 +118,80 @@ export const replyTicket = async (ticket_id: number | string, message:string) =>
         }
     }
 };
+// endpoint to create plan
+export const createPlan = async (value:any) => {
+   
+    try {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        };
+        // Use template literals to insert the ticket_id into the URL
+        const response = await axios.post(`${API_URL}/admin/plan/add`,value, { headers });
+        // console.log('addiing plan====>', response);
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            console.log(error.response.data);
+            throw new Error(error.response.data.message || 'Error fetching messages');
+        } else {
+            throw new Error('An error occurred while fetching messages.');
+        }
+    }
+};
+// endpoint to create plan
+export const fetchPlan = async () => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        };
+        // Use template literals to insert the ticket_id into the URL
+        const response = await axios.get(`${API_URL}/plans/fetch`, { headers });
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            console.log(error.response.data);
+            throw new Error(error.response.data.message || 'Error fetching messages');
+        } else {
+            throw new Error('An error occurred while fetching messages.');
+        }
+    }
+};
+
+// update a plan 
+export const updatePlan = async (plan_id: any, values: any) => {
+    console.log(values, "value=========================>")
+    const {plan_name, duration, price,...rest} = values
+    try {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        };
+        // Use template literals to insert the ticket_id into the URL
+        const response = await axios.put(`${API_URL}/admin/plan/update/${plan_id}`, {plan_name, duration, price}, { headers });
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            console.log(error.response.data);
+            throw new Error(error.response.data.message || 'Error fetching messages');
+        } else {
+            throw new Error('An error occurred while fetching messages.');
+        }
+    }
+};
+// update a plan 
+export const deletePlan = async (plan_id: any) => {
+    try {
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        };
+        // Use template literals to insert the ticket_id into the URL
+        const response = await axios.delete(`${API_URL}/admin/plan/delete/${plan_id}`, { headers });
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data) {
+            console.log(error.response.data);
+            throw new Error(error.response.data.message || 'Error fetching messages');
+        } else {
+            throw new Error('An error occurred while fetching messages.');
+        }
+    }
+};

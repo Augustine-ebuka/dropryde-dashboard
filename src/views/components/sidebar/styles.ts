@@ -104,27 +104,32 @@ export const Home = styled.li`
 export const Content = styled.div`
     padding: 0px 20px 0px 30px;
     overflow-y: auto;
-
-    /* ::-webkit-scrollbar {
-        width: 4px;
-        margin-right: 10px;
-        border-radius: 10px;
+    
+    /* Hide the scrollbar on Webkit-based browsers (Chrome, Safari) */
+    ::-webkit-scrollbar {
+        width: 0; /* Remove scrollbar width */
+        display: none; /* Hide scrollbar */
     }
     
+    /* Optional: Add a custom scrollbar if you want it to be thin and less obtrusive */
     ::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background: transparent;
     }
     
     ::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
+        background-color: rgba(0, 0, 0, 0.2); /* Light transparent scrollbar */
         border-radius: 10px;
-        padding: 0px 20px;
-    } */
+    }
+    
+    /* Firefox scrollbar hiding */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
 
     ul {
         margin-bottom: 40px;
     }
 `;
+
 
 export const MenuItems = styled.li`
     margin-bottom: 6px;

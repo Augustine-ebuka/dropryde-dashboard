@@ -24,6 +24,7 @@ import ViewProfile from './views/screens/viewProfile/viewProfile';
 import SettingsPage from './views/screens/settings/settings';
 import OrderAndSubscriptionPage from './views/screens/orders/orderSubscriptionPage';
 import { UserProvider } from './context/userContext';
+import Drivers from './views/screens/drivers/drivers';
 
 function App() {
   return (
@@ -44,11 +45,12 @@ function App() {
           <Route path="/view-profile/:id"  element={<MainLayout title={"Profile"}><ViewProfile /></MainLayout>}/>
           <Route path="/settings"  element={<MainLayout title={"settings"}><SettingsPage /></MainLayout>}/>
           <Route path="/subscribers"  element={<MainLayout title={"subscribers"}><OrderAndSubscriptionPage /></MainLayout>}/>
+          <Route path="/drivers"  element={<MainLayout title={"Drivers"}><Drivers /></MainLayout>}/>
 
         </Routes>
     </UserProvider>
       </ThemeProvider>
-    </Router>
+    </Router> 
   );
 }
 

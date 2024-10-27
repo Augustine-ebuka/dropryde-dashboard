@@ -26,9 +26,10 @@ import {
   ListItemSecondaryAction,
 } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { createPlan, fetchPlan, updatePlan, deletePlan } from '../../../apis/users'; // Import the login API
 
 const SubscriptionScreen: React.FC = () => {
-  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  const [plans, setPlans] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<AnalyticsData>({
     totalSubscribers: 0,
     monthlyRevenue: 0,
@@ -38,22 +39,33 @@ const SubscriptionScreen: React.FC = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<any | null>(null);
 
-  const [newPlan, setNewPlan] = useState<SubscriptionPlan>({
+  const [newPlan, setNewPlan] = useState<any>({
     id: '',
-    name: '',
+    plan_name: '',
     duration: 0,
-    cost: 0,
-    benefits: [],
+    price: 0,
+    // benefits: [],
   });
 
   useEffect(() => {
-    setPlans([
-      { id: '1', name: 'Basic', duration: 30, cost: 9.99, benefits: ['Feature 1', 'Feature 2'] },
-      { id: '2', name: 'Pro', duration: 30, cost: 19.99, benefits: ['Feature 1', 'Feature 2', 'Feature 3'] },
-      { id: '3', name: 'Enterprise', duration: 365, cost: 199.99, benefits: ['All Features'] },
-    ]);
+    const fetchData = async () => {
+      try {
+          const response = await fetchPlan(); // Await the response
+          console.log(response.data); // Log the resolved responseset
+          setPlans(response.data)
+      } catch (error) {
+          console.error("Error fetching plan:", error); // Log any errors
+      }
+  };
+
+  fetchData();
+    // setPlans([
+    //   { id: '1', name: 'Basic', duration: 30, cost: 9.99, benefits: ['Feature 1', 'Feature 2'] },
+    //   { id: '2', name: 'Pro', duration: 30, cost: 19.99, benefits: ['Feature 1', 'Feature 2', 'Feature 3'] },
+    //   { id: '3', name: 'Enterprise', duration: 365, cost: 199.99, benefits: ['All Features'] },
+    // ]);
 
     setAnalytics({
       totalSubscribers: 1000,
@@ -66,13 +78,13 @@ const SubscriptionScreen: React.FC = () => {
     setOpenCreateModal(true);
   };
 
-  const handleEditPlan = (plan: SubscriptionPlan) => {
+  const handleEditPlan = (plan: any) => {
     setSelectedPlan(plan);
     setNewPlan(plan);
     setOpenEditModal(true);
   };
 
-  const handleDeletePlan = (plan: SubscriptionPlan) => {
+  const handleDeletePlan = (plan: any) => {
     setSelectedPlan(plan);
     setOpenDeleteModal(true);
   };
@@ -84,28 +96,39 @@ const SubscriptionScreen: React.FC = () => {
     setSelectedPlan(null);
     setNewPlan({
       id: '',
-      name: '',
+      plan_name: '',
       duration: 0,
-      cost: 0,
-      benefits: [],
+      price: 0,
+      // benefits: [],
     });
   };
 
-  const handleSavePlan = () => {
+  const handleSavePlan = async() => {
     if (openCreateModal) {
       // Create new plan logic
       setPlans([...plans, { ...newPlan, id: Date.now().toString() }]);
+
+      const { id, ...newPlanWithoutId } = newPlan;
+
+      console.log(newPlanWithoutId, "checkking new field")
+
+      const response = await createPlan(newPlanWithoutId)
+      console.log(response)
     } else if (openEditModal && selectedPlan) {
       // Edit plan logic
       setPlans(plans.map(plan => plan.id === selectedPlan.id ? newPlan : plan));
+      const { id,name, ...newPlanWithoutId } = newPlan;
+      const response = await updatePlan(newPlan.id, newPlanWithoutId)
+      console.log(response)
     }
     handleCloseModals();
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async() => {
     if (selectedPlan) {
       // Delete plan logic
       setPlans(plans.filter(plan => plan.id !== selectedPlan.id));
+      const response = await deletePlan(selectedPlan.id)
     }
     handleCloseModals();
   };
@@ -115,7 +138,7 @@ const SubscriptionScreen: React.FC = () => {
   };
 
   const handleRemoveBenefit = (index: number) => {
-    const newBenefits = newPlan.benefits.filter((_, i) => i !== index);
+    const newBenefits = newPlan.benefits.filter((_: any, i: any) => i !== index);
     setNewPlan({ ...newPlan, benefits: newBenefits });
   };
 
@@ -135,18 +158,18 @@ const SubscriptionScreen: React.FC = () => {
             <tr>
               <Th>Name</Th>
               <Th>Duration (days)</Th>
-              <Th>Cost ($)</Th>
-              <Th>Benefits</Th>
+              <Th>Price ($)</Th>
+              {/* <Th>Benefits</Th> */}
               <Th>Actions</Th>
             </tr>
           </thead>
           <tbody>
-            {plans.map((plan) => (
+            {plans.map((plan: any) => (
               <tr key={plan.id}>
                 <Td>{plan.name}</Td>
                 <Td>{plan.duration}</Td>
-                <Td>{plan.cost.toFixed(2)}</Td>
-                <Td>{plan.benefits.join(', ')}</Td>
+                <Td>{plan.price.toFixed(2)}</Td>
+                {/* <Td>{plan.benefits.join(', ')}</Td> */}
                 <Td>
                   <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
                   <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>Delete</Button>
@@ -171,8 +194,8 @@ const SubscriptionScreen: React.FC = () => {
             label="Plan Name"
             type="text"
             fullWidth
-            value={newPlan.name}
-            onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })}
+            value={newPlan.plan_name}
+            onChange={(e) => setNewPlan({ ...newPlan, plan_name: e.target.value })}
           />
           <TextField
             margin="dense"
@@ -187,10 +210,10 @@ const SubscriptionScreen: React.FC = () => {
             label="Cost ($)"
             type="number"
             fullWidth
-            value={newPlan.cost}
-            onChange={(e) => setNewPlan({ ...newPlan, cost: parseFloat(e.target.value) })}
+            value={newPlan.price}
+            onChange={(e) => setNewPlan({ ...newPlan, price: parseFloat(e.target.value) })}
           />
-          <List>
+          {/* <List>
             {newPlan.benefits.map((benefit, index) => (
               <ListItem key={index}>
                 <ListItemText>
@@ -208,10 +231,10 @@ const SubscriptionScreen: React.FC = () => {
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
-          </List>
-          <MuiButton onClick={handleAddBenefit} startIcon={<AddIcon />}>
+          </List> */}
+          {/* <MuiButton onClick={handleAddBenefit} startIcon={<AddIcon />}>
             Add Benefit
-          </MuiButton>
+          </MuiButton> */}
         </DialogContent>
         <DialogActions>
           <MuiButton onClick={handleCloseModals} color="primary">

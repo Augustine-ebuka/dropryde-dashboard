@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Content, Head, HeadContent, Home, MenuItems, SidebarContent, SidebarWrapper, Title } from './styles';
-import { AiOutlineHome, AiOutlineWallet, AiOutlineBank } from 'react-icons/ai';
-import { BsCashStack, BsCreditCard2Back } from 'react-icons/bs';
-import { MdPhoneIphone, MdPhoneAndroid, MdOutlineChangeHistory } from 'react-icons/md';
-import { FaSatelliteDish, FaUsers } from 'react-icons/fa';
+import { Content, Head, HeadContent, MenuItems, SidebarContent, SidebarWrapper, Title } from './styles';
+import { AiOutlineHome } from 'react-icons/ai';
+import { BsCashStack } from 'react-icons/bs';
+import { FaTruck } from "react-icons/fa";
+import { MdOutlinePriceChange } from "react-icons/md";
+import { FaUsers } from 'react-icons/fa';
 import { RiUserShared2Fill } from "react-icons/ri";
 import { CgProfile, CgLogOut } from 'react-icons/cg';
 import { BiSupport } from "react-icons/bi";
@@ -13,6 +14,7 @@ import { toggleMenu } from "../../../actions";
 import { Link, useLocation } from 'react-router-dom';
 import { useUserContext } from '../../../context/userContext';
 import styled from 'styled-components';
+
 
 const StyledLink = styled(Link)`
   display: flex;
@@ -83,11 +85,12 @@ const Sidebar: React.FC = () => {
     const menuItems = [
         { path: '/dashboard', icon: <AiOutlineHome />, title: 'Home' },
         { path: '/transactions', icon: <BsCashStack />, title: 'Transactions', category: 'Transfers' },
-        { path: '/users', icon: <FaUsers />, title: 'Users', category: 'All Users' },
+        { path: '/users', icon: <FaUsers />, title: 'Users', category: 'All Users' }, 
         { path: '/subscribers', icon: <RiUserShared2Fill />, title: 'Subscribers', category: 'All Users' },
-        { path: '/subscription', icon: <MdOutlineChangeHistory />, title: 'Manage subscription', category: 'Subscription' },
+        { path: '/drivers', icon: <FaTruck />, title: 'Drivers', category: 'All Users' },
+        { path: '/subscription', icon: <MdOutlinePriceChange />, title: 'Manage Price', category: 'Subscription' },
         { path: '/settings', icon: <IoMdSettings />, title: 'Settings', category: 'Settings' },
-        { path: '/support', icon: <BiSupport />, title: 'Customer support', category: 'Support' },
+        { path: '/support', icon: <BiSupport />, title: 'Support', category: 'Support' },
         { path: '/user/profile', icon: <CgProfile />, title: 'Profile', category: 'Account' },
         { path: '/', icon: <CgLogOut />, title: 'Logout', category: 'Account' },
     ];
