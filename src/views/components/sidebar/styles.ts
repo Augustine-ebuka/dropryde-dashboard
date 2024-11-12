@@ -143,7 +143,7 @@ export const MenuItems = styled.li`
             font-size: 18px;
         }
         span {
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 400;
             color: #fafafa;
         }

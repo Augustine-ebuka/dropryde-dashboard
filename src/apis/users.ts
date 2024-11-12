@@ -118,6 +118,7 @@ export const replyTicket = async (ticket_id: number | string, message:string) =>
         }
     }
 };
+
 // endpoint to create plan
 export const createPlan = async (value:any) => {
    

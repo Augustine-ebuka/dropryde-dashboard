@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleMenu } from "../../../actions";
 import { Link, useLocation } from 'react-router-dom';
 import { useUserContext } from '../../../context/userContext';
+import { IoPeopleSharp } from "react-icons/io5";
 import styled from 'styled-components';
 
 
@@ -28,7 +29,7 @@ const StyledLink = styled(Link)`
 
   &:hover, &.active {
     background-color: black;
-    color: #007bff;
+    color: #F5AC38;
   }
 
   span {
@@ -41,6 +42,7 @@ const StyledSidebarContent = styled(SidebarContent)`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 10px;
+
 `;
 
 const StyledTitle = styled(Title)`
@@ -84,9 +86,9 @@ const Sidebar: React.FC = () => {
 
     const menuItems = [
         { path: '/dashboard', icon: <AiOutlineHome />, title: 'Home' },
-        { path: '/transactions', icon: <BsCashStack />, title: 'Transactions', category: 'Transfers' },
+        { path: '/transactions', icon: <BsCashStack />, title: 'Transact', category: 'Transfers' },
         { path: '/users', icon: <FaUsers />, title: 'Users', category: 'All Users' }, 
-        { path: '/subscribers', icon: <RiUserShared2Fill />, title: 'Subscribers', category: 'All Users' },
+        { path: '/subscribers', icon: <IoPeopleSharp />, title: 'Subscriber', category: 'All Users' },
         { path: '/drivers', icon: <FaTruck />, title: 'Drivers', category: 'All Users' },
         { path: '/subscription', icon: <MdOutlinePriceChange />, title: 'Manage Price', category: 'Subscription' },
         { path: '/settings', icon: <IoMdSettings />, title: 'Settings', category: 'Settings' },

@@ -5,6 +5,8 @@ import { login } from '../../../apis/auth'; // Import the login API
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GrFormViewHide } from "react-icons/gr";
+import { BiHide } from "react-icons/bi";
+import { AiOutlineEye } from "react-icons/ai";
 
 export default function Signin() {
   const [formData, setFormData] = useState({
@@ -74,11 +76,23 @@ export default function Signin() {
               className="login-input"
               required
             />
-            <GrFormViewHide 
+            {/* Show password toggle */}
+            {showPassword ? (
+            <AiOutlineEye
+              color="#F5AC38"
               size={25}
               onClick={() => setShowPassword(prev => !prev)}
               className="password-toggle"
             />
+          ) : (
+            <BiHide
+              color="#F5AC38"
+              size={25}
+              onClick={() => setShowPassword(prev => !prev)}
+              className="password-toggle"
+            />
+          )}
+
           </div>
 
           <button className="login-button" type="submit">

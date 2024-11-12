@@ -149,7 +149,7 @@ const HomeScreen: React.FC = () => {
 
             <TableWrapper>
                 <TableHead>
-                    <li>Transaction Reference</li>
+                    <li>Transaction Ref.</li>
                     <li>Name</li>
                     <li>Plan</li>
                     <li>Amount</li>
@@ -160,9 +160,9 @@ const HomeScreen: React.FC = () => {
                     {filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction).map((transaction) => (
                         <TableItems status={transaction.status.toLowerCase()} key={transaction.id}>
                             <li>{transaction.reference}</li>
-                            <li>{transaction.user.firstname}</li>
+                            <li>{transaction.user.firstname} {transaction.user.lastname}</li>
                             <li>{transaction.type}</li>
-                            <li>{transaction.amount}</li>
+                            <li>{transaction.amount}$</li>
                             <li>{transaction.date_created}</li>
                             <li>{transaction.status}</li>
                         </TableItems>

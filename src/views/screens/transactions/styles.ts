@@ -93,6 +93,7 @@ export const TableHead = styled.ul`
     color: #222;
     font-size: 15px;
     font-weight: 600;
+     text-align: center;
     li {
         flex: 1;
         :first-child {
@@ -126,6 +127,7 @@ export const TableItems = styled.ul<{ status: string }>`
         font-weight: 400;
         width: 50%;
         color: #5A5A5A;
+         text-align: center;
         @media screen and (min-width: 880px) {
             flex: 1;
             font-size: 14px;
@@ -144,6 +146,9 @@ export const TableItems = styled.ul<{ status: string }>`
                 width: unset;
                 margin-bottom: 0px;
             }
+        }
+              :nth-child(2) {
+           margin-left: 20px;
         }
         :last-child {
             margin-right: 0px;

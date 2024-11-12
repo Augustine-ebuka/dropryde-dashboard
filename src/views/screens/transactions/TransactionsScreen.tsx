@@ -112,7 +112,7 @@ const HomeScreen: React.FC = () => {
                     />
                     <button onClick={downloadCSV} style={{
                         padding: '10px 15px',
-                        backgroundColor: '#007bff',
+                        backgroundColor: '#F5AC38',
                         color: 'white',
                         border: 'none',
                         borderRadius: '5px',
@@ -150,9 +150,9 @@ const HomeScreen: React.FC = () => {
                     {filteredTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction).map((transaction) => (
                         <TableItems status={transaction.status.toLowerCase()} key={transaction.id}>
                             <li>{transaction.reference}</li>
-                            <li>{transaction.user.firstname}</li>
+                            <li>{transaction.user.firstname} {transaction.user.lastname}</li>
                             <li>{transaction.type}</li>
-                            <li>{transaction.amount}</li>
+                            <li>{transaction.amount}$</li>
                             <li>{transaction.date_created}</li>
                             <li>{transaction.status}</li>
                         </TableItems>

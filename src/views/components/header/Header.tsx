@@ -25,12 +25,14 @@ const  Header: React.FC<{title: String}> = ({title}) => {
                     </Link>
                 </Title>
                 <HeadMeta>
-                    <div className="notify-sec">
+                    {/* <div className="notify-sec">
                         <IoMdNotificationsOutline />
-                    </div>
+                    </div> */}
                     <div className="profile-sec">
-                        <CgProfile />
-                        <MdArrowDropDown />
+                        <Link to="/user/profile">
+                        <CgProfile color='#F5AC38'/>
+                        </Link>
+                        {/* <MdArrowDropDown /> */}
                     </div>
                 </HeadMeta>
             </Content>
