@@ -15,6 +15,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useUserContext } from '../../../context/userContext';
 import { IoPeopleSharp } from "react-icons/io5";
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledLink = styled(Link)`
@@ -61,6 +62,7 @@ const Sidebar: React.FC = () => {
     const { userProfile } = useUserContext();
     const [loading, setLoading] = useState(true);
     const location = useLocation();
+    const navigate = useNavigate(); // Add this line
 
     const sidebarRef = useRef(null);
     const contentRef = useRef(null);
@@ -69,6 +71,11 @@ const Sidebar: React.FC = () => {
         if (e.target == sidebarRef.current) {
             dispatch(toggleMenu());
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken'); // Remove auth token from localStorage
+        navigate('/'); // Redirect to login page or home page
     };
 
     useEffect(() => {
@@ -94,7 +101,7 @@ const Sidebar: React.FC = () => {
         { path: '/settings', icon: <IoMdSettings />, title: 'Settings', category: 'Settings' },
         { path: '/support', icon: <BiSupport />, title: 'Support', category: 'Support' },
         { path: '/user/profile', icon: <CgProfile />, title: 'Profile', category: 'Account' },
-        { path: '/', icon: <CgLogOut />, title: 'Logout', category: 'Account' },
+        { path: '/', icon: <CgLogOut />, title: 'Logout', category: 'Account', onClick: handleLogout }, // Add onClick here
     ];
 
     return (
@@ -117,7 +124,10 @@ const Sidebar: React.FC = () => {
                                         <MenuItems key={item.path}>
                                             <StyledLink
                                                 to={item.path}
-                                                onClick={() => dispatch(toggleMenu())}
+                                                onClick={() => {
+                                                    dispatch(toggleMenu());
+                                                    if (item.title === 'Logout') item.onClick && item.onClick(); // Trigger handleLogout if 'Logout' is clicked
+                                                }}
                                                 className={location.pathname === item.path ? 'active' : ''}
                                             >
                                                 {item.icon}

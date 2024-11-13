@@ -20,6 +20,9 @@ interface LoginResponse {
 export const login = async (values: LoginValues): Promise<LoginResponse> => {
     try {
         const response: AxiosResponse<LoginResponse> = await axios.post(`${API_URL}/admin/signin`, values);
+          if (response?.data.data.token) {
+          localStorage.setItem('authToken', response.data.data.token);
+        }
         console.log('response', response);
         return response.data;
     } catch (error: any) { 

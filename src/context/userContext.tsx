@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { profile } from '../apis/auth';
+import { useNavigate } from 'react-router-dom';
 
 // Define the shape of our user profile
 interface UserProfile {
@@ -25,12 +26,15 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate(); // Add this line
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const data = await profile();
         setUserProfile(data?.data as any);
       } catch (err) {
+        navigate('/'); // Redirect to login page if there's an error
         setError('Failed to fetch user profile');
       } finally {
         setLoading(false);

@@ -34,9 +34,8 @@ export default function Signin() {
 
       if (response.status === 1) {
         toast.success('Login successful!');
-        if (response?.data.token) {
-          localStorage.setItem('authToken', response.data.token);
-        }
+        console.log(response, "response signin");
+
         setTimeout(() => {
           navigate('/dashboard');
         }, 2000);
