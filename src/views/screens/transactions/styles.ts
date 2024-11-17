@@ -80,7 +80,7 @@ export const TableWrapper = styled.div`
     margin-top: 20px;
     border: 1px solid #eee;
     border-radius: 5px;
-    overflow: hidden;
+    overflow: auto;
     border: solid 1px rgba(0,0,0,.05);
     box-shadow: 0 0 1px rgba(0,0,0,.05);
 `;

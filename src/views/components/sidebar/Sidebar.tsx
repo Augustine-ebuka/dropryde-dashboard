@@ -93,7 +93,7 @@ const Sidebar: React.FC = () => {
 
     const menuItems = [
         { path: '/dashboard', icon: <AiOutlineHome />, title: 'Home' },
-        { path: '/transactions', icon: <BsCashStack />, title: 'Transact', category: 'Transfers' },
+        { path: '/transactions', icon: <BsCashStack />, title: 'Transaction', category: 'Transfers' },
         { path: '/users', icon: <FaUsers />, title: 'Users', category: 'All Users' }, 
         { path: '/subscribers', icon: <IoPeopleSharp />, title: 'Subscriber', category: 'All Users' },
         { path: '/drivers', icon: <FaTruck />, title: 'Drivers', category: 'All Users' },

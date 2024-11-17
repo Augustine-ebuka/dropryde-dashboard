@@ -137,7 +137,7 @@ export const MenuItems = styled.li`
         display: flex;
         align-items: flex-end;
         color: #fff;
-        padding: 6px 10px;
+        padding: 6px 5px;
         svg {
             margin-right: 10px;
             font-size: 18px;
