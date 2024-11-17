@@ -46,13 +46,13 @@ export const approveUser = async (email: string) => {
     }
 };
 // endpoint to fetch subscribers
-export const fetchSubscribers = async (email: string) => {
+export const fetchSubscribers = async () => {
     try {
         const headers = {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         };
         const response = await axios.get(`${API_URL}/admin/subscribers/fetch`,{ headers });
-        return response.data;
+        return response;
     } catch (error: any) {
         if (error.response && error.response.data) {
             console.log(error.response.data);

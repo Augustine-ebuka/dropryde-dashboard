@@ -65,47 +65,62 @@ const SubscriberManagementPage: React.FC = () => {
 
   // Fetch subscribers data (simulate API call)
   useEffect(() => {
-    const fetchedSubscribers = [
-      {
-        id: '1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        orders: [
-          { id: '1', date: '2023-05-01', status: 'New', total: 100 },
-          { id: '2', date: '2023-05-02', status: 'Completed', total: 150 },
-        ],
-        paymentHistory: [
-          { id: '1', date: '2023-05-01', amount: 100, method: 'Credit Card' },
-          { id: '2', date: '2023-05-02', amount: 150, method: 'PayPal' },
-        ],
-        subscriptionPackage: {
-          name: 'Pro',
-          price: 19.99,
-          features: ['Feature 1', 'Feature 2', 'Feature 3'],
-        },
-      },
-      {
-        id: '2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        orders: [
-          { id: '3', date: '2023-05-03', status: 'Completed', total: 200 },
-          { id: '4', date: '2023-05-04', status: 'Canceled', total: 75 },
-        ],
-        paymentHistory: [
-          { id: '3', date: '2023-05-03', amount: 200, method: 'Bank Transfer' },
-        ],
-        subscriptionPackage: {
-          name: 'Basic',
-          price: 9.99,
-          features: ['Feature 1', 'Feature 2'],
-        },
-      },
-      // Add more subscribers here for testing purposes
-    ];
+    // const fetchedSubscribers = [
+    //   {
+    //     id: '1',
+    //     name: 'John Doe',
+    //     email: 'john@example.com',
+    //     orders: [
+    //       { id: '1', date: '2023-05-01', status: 'New', total: 100 },
+    //       { id: '2', date: '2023-05-02', status: 'Completed', total: 150 },
+    //     ],
+    //     paymentHistory: [
+    //       { id: '1', date: '2023-05-01', amount: 100, method: 'Credit Card' },
+    //       { id: '2', date: '2023-05-02', amount: 150, method: 'PayPal' },
+    //     ],
+    //     subscriptionPackage: {
+    //       name: 'Pro',
+    //       price: 19.99,
+    //       features: ['Feature 1', 'Feature 2', 'Feature 3'],
+    //     },
+    //   },
+    //   {
+    //     id: '2',
+    //     name: 'Jane Smith',
+    //     email: 'jane@example.com',
+    //     orders: [
+    //       { id: '3', date: '2023-05-03', status: 'Completed', total: 200 },
+    //       { id: '4', date: '2023-05-04', status: 'Canceled', total: 75 },
+    //     ],
+    //     paymentHistory: [
+    //       { id: '3', date: '2023-05-03', amount: 200, method: 'Bank Transfer' },
+    //     ],
+    //     subscriptionPackage: {
+    //       name: 'Basic',
+    //       price: 9.99,
+    //       features: ['Feature 1', 'Feature 2'],
+    //     },
+    //   },
+    //   // Add more subscribers here for testing purposes
+    // ];
 
-    setSubscribers(fetchedSubscribers);
-    setFilteredSubscribers(fetchedSubscribers);
+    const fetchSubscriber: any = async () => {
+      try {
+        const data = await fetchSubscribers();
+        setSubscribers(data?.data?.data);
+        setFilteredSubscribers(data?.data?.data);
+        console.log('Subscribers:', data?.data?.data);
+        return data;
+      } catch (error) {
+        console.error('Error fetching subscribers:', error);
+        return [];
+      }
+    }
+
+    fetchSubscriber()
+      
+
+
   }, []);
 
   const handleSubscriberSelect = (subscriber: Subscriber) => {
@@ -123,7 +138,7 @@ const SubscriberManagementPage: React.FC = () => {
 
     const filtered = subscribers.filter(subscriber => 
       subscriber.email.toLowerCase().includes(query) ||
-      subscriber.name.toLowerCase().includes(query)
+      subscriber.firstname.toLowerCase().includes(query)
     );
     setFilteredSubscribers(filtered);
   };
@@ -160,7 +175,7 @@ const SubscriberManagementPage: React.FC = () => {
               {filteredSubscribers.map((subscriber) => (
                 <ListItem key={subscriber.id} disablePadding>
                   <ListItemButton onClick={() => handleSubscriberSelect(subscriber)}>
-                    <ListItemText primary={subscriber.name} secondary={subscriber.email} />
+                    <ListItemText primary={subscriber.firstname} secondary={subscriber.email} />
                   </ListItemButton>
                 </ListItem>
               ))}
