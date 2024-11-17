@@ -103,6 +103,7 @@ const CompanyManagement: React.FC = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage] = useState<number>(10);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     fetchCompanyData();
@@ -303,11 +304,50 @@ const CompanyManagement: React.FC = () => {
                 </ListItem>
                 <ImageListItem>
                   <img
-                    src={`${selectedCompany.address_doc}?w=164&h=164&fit=crop&auto=format`}
-                    srcSet={`${selectedCompany.address_doc}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                    alt='image'
-                    loading="lazy"
-                    style={{ borderRadius: '8px' }} // Optional: to round the corners
+                    src={selectedCompany?.address_doc}
+                    alt='address_doc'
+                    style={{
+                      borderRadius: '8px',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      opacity: isLoaded ? 1 : 0,
+                      transition: 'opacity 0.3s'
+                    }}
+                    onLoad={() => setIsLoaded(true)}
+                    onError={(e) => console.error('Image loading error:', e)}
+                  />
+              </ImageListItem>
+                <ImageListItem>
+                  <img
+                    src={selectedCompany?.identity_doc}
+                    alt='identity_doc'
+                    style={{
+                      borderRadius: '8px',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      opacity: isLoaded ? 1 : 0,
+                      transition: 'opacity 0.3s'
+                    }}
+                    onLoad={() => setIsLoaded(true)}
+                    onError={(e) => console.error('Image loading error:', e)}
+                  />
+              </ImageListItem>
+                <ImageListItem>
+                  <img
+                    src={selectedCompany?.business_doc}
+                    alt='business_doc'
+                    style={{
+                      borderRadius: '8px',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      opacity: isLoaded ? 1 : 0,
+                      transition: 'opacity 0.3s'
+                    }}
+                    onLoad={() => setIsLoaded(true)}
+                    onError={(e) => console.error('Image loading error:', e)}
                   />
               </ImageListItem>
               </List>
