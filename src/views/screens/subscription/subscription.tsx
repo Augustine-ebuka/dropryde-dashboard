@@ -80,7 +80,12 @@ const SubscriptionScreen: React.FC = () => {
 
   const handleEditPlan = (plan: any) => {
     setSelectedPlan(plan);
-    setNewPlan(plan);
+    setNewPlan({
+      id: plan.id,
+      plan_name: plan.name,
+      duration: plan.duration,
+      price: plan.price,
+    });
     setOpenEditModal(true);
   };
 
@@ -104,24 +109,30 @@ const SubscriptionScreen: React.FC = () => {
   };
 
   const handleSavePlan = async() => {
-    if (openCreateModal) {
-      // Create new plan logic
-      setPlans([...plans, { ...newPlan, id: Date.now().toString() }]);
-
-      const { id, ...newPlanWithoutId } = newPlan;
-
-      console.log(newPlanWithoutId, "checkking new field")
-
-      const response = await createPlan(newPlanWithoutId)
-      console.log(response)
-    } else if (openEditModal && selectedPlan) {
-      // Edit plan logic
-      setPlans(plans.map(plan => plan.id === selectedPlan.id ? newPlan : plan));
-      const { id,name, ...newPlanWithoutId } = newPlan;
-      const response = await updatePlan(newPlan.id, newPlanWithoutId)
-      console.log(response)
+    try {
+      if (openCreateModal) {
+        const { id, ...newPlanWithoutId } = newPlan;
+        const response = await createPlan(newPlanWithoutId);
+        if (response.status === 200 || response.status === 201) {
+          const updatedPlans = await fetchPlan();
+          setPlans(updatedPlans.data);
+        }
+      } else if (openEditModal && selectedPlan) {
+        const updateData = {
+          plan_name: newPlan.plan_name || selectedPlan.name,
+          duration: newPlan.duration || selectedPlan.duration,
+          price: newPlan.price || selectedPlan.price,
+        };
+        const response = await updatePlan(selectedPlan.id, updateData);
+        if (response.status === 200) {
+          const updatedPlans = await fetchPlan();
+          setPlans(updatedPlans.data);
+        }
+      }
+      handleCloseModals();
+    } catch (error) {
+      console.error("Error saving plan:", error);
     }
-    handleCloseModals();
   };
 
   const handleConfirmDelete = async() => {
@@ -150,118 +161,149 @@ const SubscriptionScreen: React.FC = () => {
 
   return (
     <ScreenContainer>
-      <Section>
-        <SectionTitle>Subscription Settings</SectionTitle>
-        <Button onClick={handleCreatePlan} style={{backgroundColor:"black", marginTop:"15px", marginBottom:"15px"}}>Create New Plan</Button>
-        <Table>
-          <thead>
-            <tr>
-              <Th>Name</Th>
-              <Th>Duration (days)</Th>
-              <Th>Price ($)</Th>
-              {/* <Th>Benefits</Th> */}
-              <Th>Actions</Th>
+    <Section>
+      <SectionTitle>Subscription Settings</SectionTitle>
+      <Button onClick={handleCreatePlan} style={{backgroundColor:"black", marginTop:"15px", marginBottom:"15px"}}>
+        Create New Plan
+      </Button>
+      <Table>
+        <thead>
+          <tr>
+            <Th>Name</Th>
+            <Th>Duration (days)</Th>
+            <Th>Price ($)</Th>
+            <Th>Actions</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {plans.map((plan: any) => (
+            <tr key={plan.id}>
+              <Td>{plan.name}</Td>
+              <Td>{plan.duration}</Td>
+              <Td>{plan.price.toFixed(2)}</Td>
+              <Td>
+                <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
+                <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>
+                  Delete
+                </Button>
+              </Td>
             </tr>
-          </thead>
-          <tbody>
-            {plans.map((plan: any) => (
-              <tr key={plan.id}>
-                <Td>{plan.name}</Td>
-                <Td>{plan.duration}</Td>
-                <Td>{plan.price.toFixed(2)}</Td>
-                {/* <Td>{plan.benefits.join(', ')}</Td> */}
-                <Td>
-                  <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
-                  <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>Delete</Button>
-                </Td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Section>
+          ))}
+        </tbody>
+      </Table>
+    </Section>
 
-      <Section>
-        <TickPlacementBars />
-      </Section>
+    <Section>
+      <TickPlacementBars />
+    </Section>
 
-      {/* Create/Edit Plan Modal */}
-      <Dialog open={openCreateModal || openEditModal} onClose={handleCloseModals}>
-        <DialogTitle>{openCreateModal ? 'Create New Plan' : 'Edit Plan'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Plan Name"
-            type="text"
-            fullWidth
-            value={newPlan.plan_name}
-            onChange={(e) => setNewPlan({ ...newPlan, plan_name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Duration (days)"
-            type="number"
-            fullWidth
-            value={newPlan.duration}
-            onChange={(e) => setNewPlan({ ...newPlan, duration: parseInt(e.target.value) })}
-          />
-          <TextField
-            margin="dense"
-            label="Cost ($)"
-            type="number"
-            fullWidth
-            value={newPlan.price}
-            onChange={(e) => setNewPlan({ ...newPlan, price: parseFloat(e.target.value) })}
-          />
-          {/* <List>
-            {newPlan.benefits.map((benefit, index) => (
-              <ListItem key={index}>
-                <ListItemText>
-                  <TextField
-                    fullWidth
-                    value={benefit}
-                    onChange={(e) => handleBenefitChange(index, e.target.value)}
-                    placeholder={`Benefit ${index + 1}`}
-                  />
-                </ListItemText>
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" onClick={() => handleRemoveBenefit(index)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List> */}
-          {/* <MuiButton onClick={handleAddBenefit} startIcon={<AddIcon />}>
-            Add Benefit
-          </MuiButton> */}
-        </DialogContent>
-        <DialogActions>
-          <MuiButton onClick={handleCloseModals} color="primary">
-            Cancel
-          </MuiButton>
-          <MuiButton onClick={handleSavePlan} color="primary">
-            Save
-          </MuiButton>
-        </DialogActions>
-      </Dialog>
+    {/* Create Plan Modal */}
+    <Dialog open={openCreateModal} onClose={handleCloseModals}>
+      <DialogTitle>Create New Plan</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Plan Name"
+          type="text"
+          placeholder='Enter Plan Name'
+          fullWidth
+          value={newPlan.plan_name}
+          onChange={(e) => setNewPlan({ ...newPlan, plan_name: e.target.value })}
+        />
+        <TextField
+          margin="dense"
+          label="Duration (days)"
+          type="number"
+          fullWidth
+          value={newPlan.duration}
+          onChange={(e) => setNewPlan({ ...newPlan, duration: parseInt(e.target.value) })}
+        />
+        <TextField
+          margin="dense"
+          label="Price ($)"
+          type="number"
+          fullWidth
+          value={newPlan.price === 0 ? '0' : newPlan.price}
+          onChange={(e) => setNewPlan({ ...newPlan, price: parseFloat(e.target.value) })}
+        />
+      </DialogContent>
+      <DialogActions>
+        <MuiButton onClick={handleCloseModals} color="primary">
+          Cancel
+        </MuiButton>
+        <MuiButton onClick={handleSavePlan} color="primary">
+          Save
+        </MuiButton>
+      </DialogActions>
+    </Dialog>
 
-      {/* Delete Plan Modal */}
-      <Dialog open={openDeleteModal} onClose={handleCloseModals}>
-        <DialogTitle>Delete Plan</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete the plan "{selectedPlan?.name}"?
-        </DialogContent>
-        <DialogActions>
-          <MuiButton onClick={handleCloseModals} color="primary">
-            Cancel
-          </MuiButton>
-          <MuiButton onClick={handleConfirmDelete} color="secondary">
-            Delete
-          </MuiButton>
-        </DialogActions>
-      </Dialog>
-    </ScreenContainer>
+    {/* Edit Plan Modal */}
+    <Dialog open={openEditModal} onClose={handleCloseModals}>
+      <DialogTitle>Edit Plan</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Plan Name"
+          type="text"
+          fullWidth
+          placeholder={selectedPlan?.name || ''}
+          onChange={(e) => setNewPlan({ 
+            ...newPlan, 
+            plan_name: e.target.value,
+            name: e.target.value // Update both fields to maintain consistency
+          })}
+        />
+        <TextField
+          margin="dense"
+          label="Duration (days)"
+          type="number"
+          fullWidth
+          placeholder={selectedPlan?.duration || 0}
+          onChange={(e) => setNewPlan({ 
+            ...newPlan, 
+            duration: parseInt(e.target.value)
+          })}
+        />
+        <TextField
+          margin="dense"
+          label="Price ($)"
+          type="number"
+          fullWidth
+          placeholder={selectedPlan?.price || 0}
+          onChange={(e) => setNewPlan({ 
+            ...newPlan, 
+            price: parseFloat(e.target.value)
+          })}
+        />
+      </DialogContent>
+      <DialogActions>
+        <MuiButton onClick={handleCloseModals} color="primary">
+          Cancel
+        </MuiButton>
+        <MuiButton onClick={handleSavePlan} color="primary">
+          Save
+        </MuiButton>
+      </DialogActions>
+    </Dialog>
+
+    {/* Delete Plan Modal */}
+    <Dialog open={openDeleteModal} onClose={handleCloseModals}>
+      <DialogTitle>Delete Plan</DialogTitle>
+      <DialogContent>
+        Are you sure you want to delete the plan "{selectedPlan?.name}"?
+      </DialogContent>
+      <DialogActions>
+        <MuiButton onClick={handleCloseModals} color="primary">
+          Cancel
+        </MuiButton>
+        <MuiButton onClick={handleConfirmDelete} color="secondary">
+          Delete
+        </MuiButton>
+      </DialogActions>
+    </Dialog>
+  </ScreenContainer>
   );
 };
 

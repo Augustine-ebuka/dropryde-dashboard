@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
 
 const API_URL = 'https://dropryde-backend.coralscale.com/v1';
 
@@ -160,6 +161,7 @@ export const fetchPlan = async () => {
 
 // update a plan 
 export const updatePlan = async (plan_id: any, values: any) => {
+    console.log(plan_id, "plan_id=========================>")
     console.log(values, "value=========================>")
     const {plan_name, duration, price,...rest} = values
     try {
@@ -172,6 +174,7 @@ export const updatePlan = async (plan_id: any, values: any) => {
     } catch (error: any) {
         if (error.response && error.response.data) {
             console.log(error.response.data);
+            toast.error(error.response.data.message || 'Error fetching messages');
             throw new Error(error.response.data.message || 'Error fetching messages');
         } else {
             throw new Error('An error occurred while fetching messages.');
