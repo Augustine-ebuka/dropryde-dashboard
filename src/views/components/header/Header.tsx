@@ -20,7 +20,7 @@ const  Header: React.FC<{title: String}> = ({title}) => {
                 </div>
                 <Title>
                     {/* {title} */}
-                    <Link to="/">
+                    <Link to="/dashboard">
                         <img  src="/img/dropryde.png" alt="" />
                     </Link>
                 </Title>

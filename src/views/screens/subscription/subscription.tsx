@@ -182,10 +182,10 @@ const SubscriptionScreen: React.FC = () => {
               <Td>{plan.duration}</Td>
               <Td>{plan.price.toFixed(2)}</Td>
               <Td>
-                <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
-                <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>
-                  Delete
-                </Button>
+              <Button onClick={() => handleEditPlan(plan)}>Edit</Button>
+              <Button onClick={() => handleDeletePlan(plan)} style={{backgroundColor:"red"}}>
+                Delete
+              </Button>
               </Td>
             </tr>
           ))}
